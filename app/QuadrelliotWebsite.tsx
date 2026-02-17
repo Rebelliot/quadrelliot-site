@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Check, ChevronRight, Shield, FileText, Camera, Building2, Phone, Scale } from "lucide-react";
 
-const Container = ({ children }) => (
+const Container = ({ children }: { children: React.ReactNode }) => (
   <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">{children}</div>
 );
 
