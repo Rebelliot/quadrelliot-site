@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import Image from "next/image";
 
 type Route = "home" | "services" | "compliance" | "contact";
 
@@ -74,7 +75,9 @@ function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
 }
 
 function SelectNative(
-  props: React.SelectHTMLAttributes<HTMLSelectElement> & { options: { value: string; label: string }[] }
+  props: React.SelectHTMLAttributes<HTMLSelectElement> & {
+    options: { value: string; label: string }[];
+  }
 ) {
   const { options, ...rest } = props;
   return (
@@ -144,7 +147,7 @@ export default function QuadrelliotWebsite() {
   const [company, setCompany] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState(""); // optional
+  const [phone, setPhone] = useState(""); // optional (customer's number)
   const [postcode, setPostcode] = useState("");
   const [serviceWanted, setServiceWanted] = useState<ServiceKey>("inspection");
   const [duration, setDuration] = useState("halfday");
@@ -174,7 +177,6 @@ export default function QuadrelliotWebsite() {
   function submitEnquiry(e: React.FormEvent) {
     e.preventDefault();
 
-    // Minimal, reliable: open user's mail client with prefilled details.
     const subject = encodeURIComponent("Quadrelliot — Project Enquiry");
     const body = encodeURIComponent(
       [
@@ -199,12 +201,28 @@ export default function QuadrelliotWebsite() {
       {/* Header */}
       <div className="border-b border-white/10">
         <Container>
-          <div className="flex items-center justify-between py-5">
-            <div className="leading-tight">
-              <div className="text-xl font-semibold">Quadrelliot</div>
-              <div className="text-sm text-zinc-400">Precision Drone Operations · UK</div>
-            </div>
+          <div className="flex items-center justify-between gap-6 py-5">
+            {/* Brand */}
+            <button
+              onClick={() => setRoute("home")}
+              className="flex items-center gap-3 text-left"
+              aria-label="Go to home"
+            >
+              <Image
+                src="/brand/quadrelliot-q.png"
+                alt="Quadrelliot Q mark"
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-lg"
+                priority
+              />
+              <div className="leading-tight">
+                <div className="text-xl font-semibold">Quadrelliot</div>
+                <div className="text-sm text-zinc-400">Precision Drone Operations · UK</div>
+              </div>
+            </button>
 
+            {/* Nav */}
             <nav className="hidden items-center gap-2 md:flex">
               <Button variant="secondary" onClick={() => setRoute("services")}>
                 Services
@@ -215,6 +233,7 @@ export default function QuadrelliotWebsite() {
               <Button onClick={() => setRoute("contact")}>Request Proposal</Button>
             </nav>
 
+            {/* Mobile */}
             <div className="flex gap-2 md:hidden">
               <Button variant="secondary" onClick={() => setRoute("services")}>
                 Services
@@ -230,6 +249,18 @@ export default function QuadrelliotWebsite() {
         <Container>
           <div className="grid gap-10 py-16 md:grid-cols-2">
             <div>
+              {/* Big brand hit */}
+              <div className="mb-8">
+                <Image
+                  src="/brand/quadrelliot-wordmark.png"
+                  alt="Quadrelliot"
+                  width={800}
+                  height={260}
+                  className="h-auto w-full max-w-xl opacity-90"
+                  priority
+                />
+              </div>
+
               <h1 className="text-4xl font-semibold leading-tight">
                 Enterprise-standard drone operations.
               </h1>
@@ -260,18 +291,47 @@ export default function QuadrelliotWebsite() {
             <Card>
               <CardHeader title="Core Capability" desc="Built for inspection, reporting and repeatability." />
               <CardBody>
-                <div className="space-y-3 text-sm text-zinc-300">
-                  <div className="flex gap-3">
-                    <div className="mt-1 h-2 w-2 rounded-full bg-white/40" />
-                    <div>Structured Asset Inspection</div>
+                <div className="space-y-4 text-sm text-zinc-300">
+                  <div className="flex items-start gap-4">
+                    <Image
+                      src="/brand/quadrelliot-q.png"
+                      alt=""
+                      width={28}
+                      height={28}
+                      className="mt-0.5 h-7 w-7 opacity-70"
+                    />
+                    <div>
+                      <div className="font-medium text-zinc-100">Structured Asset Inspection</div>
+                      <div className="text-zinc-400">Repeatable capture + clear defect documentation.</div>
+                    </div>
                   </div>
-                  <div className="flex gap-3">
-                    <div className="mt-1 h-2 w-2 rounded-full bg-white/40" />
-                    <div>Professional Aerial Capture</div>
+
+                  <div className="flex items-start gap-4">
+                    <Image
+                      src="/brand/quadrelliot-q.png"
+                      alt=""
+                      width={28}
+                      height={28}
+                      className="mt-0.5 h-7 w-7 opacity-70"
+                    />
+                    <div>
+                      <div className="font-medium text-zinc-100">Professional Aerial Capture</div>
+                      <div className="text-zinc-400">Stills and video with clean deliverables.</div>
+                    </div>
                   </div>
-                  <div className="flex gap-3">
-                    <div className="mt-1 h-2 w-2 rounded-full bg-white/40" />
-                    <div>Audit-friendly deliverables</div>
+
+                  <div className="flex items-start gap-4">
+                    <Image
+                      src="/brand/quadrelliot-q.png"
+                      alt=""
+                      width={28}
+                      height={28}
+                      className="mt-0.5 h-7 w-7 opacity-70"
+                    />
+                    <div>
+                      <div className="font-medium text-zinc-100">Audit-friendly reporting</div>
+                      <div className="text-zinc-400">File naming, structure, and client-ready PDFs.</div>
+                    </div>
                   </div>
                 </div>
               </CardBody>
@@ -436,7 +496,7 @@ export default function QuadrelliotWebsite() {
                   <TextInput
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Phone number (optional)"
+                    placeholder="Your phone number (optional)"
                     inputMode="tel"
                   />
                 </div>
@@ -475,26 +535,34 @@ export default function QuadrelliotWebsite() {
               </form>
             </div>
 
-          <Card>
-  <CardHeader title="Direct Contact" />
-  <CardBody>
-    <div className="space-y-3 text-sm text-zinc-300">
-      <div>
-        <div className="text-zinc-400">Email</div>
-        <div className="font-medium text-zinc-100">
-          quadrelliot@gmail.com
-        </div>
-      </div>
+            {/* Direct Contact (NO weird line) */}
+            <Card>
+              <CardHeader title="Direct Contact" />
+              <CardBody>
+                <div className="flex items-center gap-3 pb-4">
+                  <Image
+                    src="/brand/quadrelliot-q.png"
+                    alt="Quadrelliot"
+                    width={36}
+                    height={36}
+                    className="h-9 w-9 opacity-90"
+                  />
+                  <div className="text-sm text-zinc-400">quadrelliot@gmail.com</div>
+                </div>
 
-      <div className="border-t border-white/10 pt-4">
-        <div className="text-zinc-400">Notes</div>
-        <div className="mt-1">
-          CAA-compliant operations. Risk assessment per site. Insured.
-        </div>
-      </div>
-    </div>
-  </CardBody>
-</Card>
+                <div className="space-y-3 text-sm text-zinc-300">
+                  <div>
+                    <div className="text-zinc-400">Email</div>
+                    <div className="font-medium text-zinc-100">quadrelliot@gmail.com</div>
+                  </div>
+
+                  <div className="border-t border-white/10 pt-4">
+                    <div className="text-zinc-400">Notes</div>
+                    <div className="mt-1">CAA-compliant operations. Risk assessment per site. Insured.</div>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
           </div>
         </Container>
       )}
@@ -502,8 +570,19 @@ export default function QuadrelliotWebsite() {
       {/* Footer */}
       <div className="border-t border-white/10">
         <Container>
-          <div className="py-8 text-sm text-zinc-500">
-            © {new Date().getFullYear()} Quadrelliot · Precision Drone Operations · United Kingdom
+          <div className="flex flex-col gap-4 py-8 md:flex-row md:items-center md:justify-between">
+            <div className="text-sm text-zinc-500">
+              © {new Date().getFullYear()} Quadrelliot · Precision Drone Operations · United Kingdom
+            </div>
+            <div className="opacity-70">
+              <Image
+                src="/brand/quadrelliot-wordmark.png"
+                alt="Quadrelliot"
+                width={260}
+                height={84}
+                className="h-auto w-[220px]"
+              />
+            </div>
           </div>
         </Container>
       </div>
