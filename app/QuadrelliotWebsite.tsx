@@ -1,24 +1,41 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Check, ChevronRight, Shield, FileText, Camera, Building2, Phone, Scale } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Check,
+  ChevronRight,
+  Shield,
+  FileText,
+  Camera,
+  Building2,
+  Phone,
+  Scale,
+} from "lucide-react";
 
 const Container = ({ children }: { children: React.ReactNode }) => (
   <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">{children}</div>
 );
 
-export default function QuadrelliotWebsite() {
-  const [route, setRoute] = useState("home");
-  const [service, setService] = useState("inspection");
-
-  const SERVICES = {
+const SERVICES = {
   inspection: {
     title: "Roof & Asset Inspection",
     desc: "High-resolution aerial inspection with structured reporting.",
@@ -29,7 +46,6 @@ export default function QuadrelliotWebsite() {
       "Thermal capability launching soon",
     ],
   },
-
   documentation: {
     title: "Site Documentation",
     desc: "Visual progress records for construction and property projects.",
@@ -40,7 +56,6 @@ export default function QuadrelliotWebsite() {
       "Clear file labelling for project teams",
     ],
   },
-
   cinematography: {
     title: "Aerial Cinematography",
     desc: "Professional aerial capture for corporate and branded content.",
@@ -51,10 +66,20 @@ export default function QuadrelliotWebsite() {
       "Clear usage licensing",
     ],
   },
-};
+} as const;
 
+type Route = "home" | "services" | "compliance" | "contact";
+type ServiceKey = keyof typeof SERVICES;
 
-  const current = SERVICES[service];
+export default function QuadrelliotWebsite() {
+  const [route, setRoute] = useState<Route>("home");
+  const [service, setService] = useState<ServiceKey>("inspection");
+
+  const current = useMemo(() => SERVICES[service], [service]);
+  const serviceKeys = useMemo(
+    () => Object.keys(SERVICES) as ServiceKey[],
+    []
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -64,11 +89,17 @@ export default function QuadrelliotWebsite() {
           <div className="flex items-center justify-between py-4">
             <div>
               <div className="text-xl font-semibold">Quadrelliot</div>
-              <div className="text-sm text-muted-foreground">Precision Drone Operations · UK</div>
+              <div className="text-sm text-muted-foreground">
+                Precision Drone Operations · UK
+              </div>
             </div>
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={() => setRoute("services")}>Services</Button>
-              <Button variant="secondary" onClick={() => setRoute("compliance")}>Compliance</Button>
+              <Button variant="secondary" onClick={() => setRoute("services")}>
+                Services
+              </Button>
+              <Button variant="secondary" onClick={() => setRoute("compliance")}>
+                Compliance
+              </Button>
               <Button onClick={() => setRoute("contact")}>Request Proposal</Button>
             </div>
           </div>
@@ -84,7 +115,8 @@ export default function QuadrelliotWebsite() {
                 Enterprise-standard drone operations.
               </h1>
               <p className="mt-4 text-muted-foreground">
-                Inspection-led aerial services with disciplined planning, structured reporting and regulatory compliance.
+                Inspection-led aerial services with disciplined planning, structured
+                reporting and regulatory compliance.
               </p>
               <div className="mt-6 flex gap-3">
                 <Button onClick={() => setRoute("services")}>
@@ -100,6 +132,7 @@ export default function QuadrelliotWebsite() {
                 <Badge variant="outline">Method Statement Included</Badge>
               </div>
             </motion.div>
+
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <Card>
                 <CardHeader>
@@ -129,14 +162,18 @@ export default function QuadrelliotWebsite() {
             <h2 className="text-3xl font-semibold">Services</h2>
             <div className="mt-8 grid gap-6 md:grid-cols-[300px_1fr]">
               <Card>
-                <CardHeader><CardTitle>Select Service</CardTitle></CardHeader>
+                <CardHeader>
+                  <CardTitle>Select Service</CardTitle>
+                </CardHeader>
                 <CardContent className="space-y-2">
-                  {Object.keys(SERVICES).map((key) => (
+                  {serviceKeys.map((key) => (
                     <button
                       key={key}
                       onClick={() => setService(key)}
                       className={`w-full rounded-xl border p-3 text-left transition ${
-                        service === key ? "bg-foreground text-background" : "hover:bg-foreground/5"
+                        service === key
+                          ? "bg-foreground text-background"
+                          : "hover:bg-foreground/5"
                       }`}
                     >
                       {SERVICES[key].title}
@@ -144,6 +181,7 @@ export default function QuadrelliotWebsite() {
                   ))}
                 </CardContent>
               </Card>
+
               <Card>
                 <CardHeader>
                   <CardTitle>{current.title}</CardTitle>
@@ -158,7 +196,9 @@ export default function QuadrelliotWebsite() {
                     ))}
                   </ul>
                   <div className="mt-6">
-                    <Button onClick={() => setRoute("contact")}>Submit Requirements</Button>
+                    <Button onClick={() => setRoute("contact")}>
+                      Submit Requirements
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -167,7 +207,7 @@ export default function QuadrelliotWebsite() {
         </Container>
       )}
 
-      {/* Compliance Page */}
+      {/* Compliance */}
       {route === "compliance" && (
         <Container>
           <div className="py-16">
@@ -175,29 +215,37 @@ export default function QuadrelliotWebsite() {
             <div className="mt-8 grid gap-6 md:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2"><Shield className="h-4 w-4" /> Regulatory</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="h-4 w-4" /> Regulatory
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-muted-foreground space-y-2">
+                <CardContent className="space-y-2 text-sm text-muted-foreground">
                   <div>UK Civil Aviation Authority compliant operations</div>
                   <div>Operational risk assessment conducted per project</div>
                   <div>Pre-flight airspace and site checks</div>
                 </CardContent>
               </Card>
+
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2"><Scale className="h-4 w-4" /> Insurance</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Scale className="h-4 w-4" /> Insurance
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-muted-foreground space-y-2">
+                <CardContent className="space-y-2 text-sm text-muted-foreground">
                   <div>Public Liability Insurance</div>
                   <div>Documentation available upon request</div>
                   <div>Method statement and RAMS provided</div>
                 </CardContent>
               </Card>
+
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2"><FileText className="h-4 w-4" /> Data Handling</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-4 w-4" /> Data Handling
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-muted-foreground space-y-2">
+                <CardContent className="space-y-2 text-sm text-muted-foreground">
                   <div>Secure file delivery</div>
                   <div>Structured file naming</div>
                   <div>Client confidentiality respected</div>
@@ -208,47 +256,63 @@ export default function QuadrelliotWebsite() {
         </Container>
       )}
 
-      {/* Structured Proposal Form */}
+      {/* Contact */}
       {route === "contact" && (
         <Container>
-          <div className="py-16 grid gap-10 md:grid-cols-2">
+          <div className="grid gap-10 py-16 md:grid-cols-2">
             <div>
               <h2 className="text-3xl font-semibold">Submit Project Requirements</h2>
               <p className="mt-2 text-muted-foreground">
                 Provide structured scope details for formal quotation.
               </p>
+
               <div className="mt-6 space-y-4">
                 <Input placeholder="Company Name" />
                 <Input placeholder="Contact Name" />
                 <Input placeholder="Email Address" />
                 <Input placeholder="Project Location / Postcode" />
+
                 <Select>
-                  <SelectTrigger><SelectValue placeholder="Select Service" /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Service" />
+                  </SelectTrigger>
                   <SelectContent>
-                    {Object.keys(SERVICES).map((key) => (
-                      <SelectItem key={key} value={key}>{SERVICES[key].title}</SelectItem>
+                    {serviceKeys.map((key) => (
+                      <SelectItem key={key} value={key}>
+                        {SERVICES[key].title}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+
                 <Select>
-                  <SelectTrigger><SelectValue placeholder="Estimated Project Duration" /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Estimated Project Duration" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="halfday">Half Day</SelectItem>
                     <SelectItem value="fullday">Full Day</SelectItem>
                     <SelectItem value="multi">Multi-Day</SelectItem>
                   </SelectContent>
                 </Select>
+
                 <Textarea placeholder="Scope of work, deliverables required, deadline, site constraints" />
                 <Button className="w-full">Submit Formal Enquiry</Button>
               </div>
             </div>
+
             <Card>
               <CardHeader>
                 <CardTitle>Direct Contact</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm space-y-3">
-                <div className="flex items-start gap-2"><Phone className="mt-0.5 h-4 w-4" /> quadrelliot@gmail.com</div>
-                <div className="flex items-start gap-2"><Shield className="mt-0.5 h-4 w-4" /> Fully compliant UK drone operations</div>
+              <CardContent className="space-y-3 text-sm">
+                <div className="flex items-start gap-2">
+                  <Phone className="mt-0.5 h-4 w-4" /> quadrelliot@gmail.com
+                </div>
+                <div className="flex items-start gap-2">
+                  <Shield className="mt-0.5 h-4 w-4" /> Fully compliant UK drone
+                  operations
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -259,7 +323,8 @@ export default function QuadrelliotWebsite() {
       <div className="border-t">
         <Container>
           <div className="py-6 text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Quadrelliot · Precision Drone Operations · United Kingdom
+            © {new Date().getFullYear()} Quadrelliot · Precision Drone Operations ·
+            United Kingdom
           </div>
         </Container>
       </div>
