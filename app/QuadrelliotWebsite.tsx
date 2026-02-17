@@ -147,10 +147,7 @@ function Header({
   setRoute: React.Dispatch<React.SetStateAction<Route>>;
 }) {
   const navBtn = (r: Route, label: string, variant: "primary" | "secondary" = "secondary") => (
-    <Button
-      variant={variant}
-      onClick={() => setRoute(r)}
-    >
+    <Button variant={variant} onClick={() => setRoute(r)}>
       {label}
     </Button>
   );
@@ -191,7 +188,6 @@ function Header({
         </div>
       </Container>
 
-      {/* tiny route indicator (subtle) */}
       <div className="border-t border-white/5">
         <Container>
           <div className="flex items-center justify-between py-2 text-xs text-zinc-600">
@@ -208,11 +204,10 @@ export default function QuadrelliotWebsite() {
   const [route, setRoute] = useState<Route>("home");
   const [service, setService] = useState<ServiceKey>("inspection");
 
-  // Contact form state (customer-provided)
   const [company, setCompany] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState(""); // optional (customer's number)
+  const [phone, setPhone] = useState("");
   const [postcode, setPostcode] = useState("");
   const [serviceWanted, setServiceWanted] = useState<ServiceKey>("inspection");
   const [duration, setDuration] = useState("halfday");
@@ -261,6 +256,12 @@ export default function QuadrelliotWebsite() {
     window.location.href = `mailto:quadrelliot@gmail.com?subject=${subject}&body=${body}`;
   }
 
+  function scrollToId(id: string) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <div className="min-h-screen bg-black text-zinc-100">
       <Header route={route} setRoute={setRoute} />
@@ -287,16 +288,17 @@ export default function QuadrelliotWebsite() {
                   />
 
                   <h1 className="mt-8 text-4xl font-semibold leading-tight">
-                    Enterprise-standard drone operations.
+                    Roof & asset inspections with audit-ready reporting.
                   </h1>
                   <p className="mt-4 max-w-xl text-zinc-400">
-                    Inspection-led aerial services with disciplined planning, structured reporting and regulatory compliance.
+                    Repeatable capture, clear defect documentation, and client-ready deliverables — built for facilities,
+                    construction, and property teams.
                   </p>
 
                   <div className="mt-7 flex flex-wrap gap-3">
-                    <Button onClick={() => setRoute("services")}>View Services</Button>
-                    <Button variant="secondary" onClick={() => setRoute("contact")}>
-                      Submit Requirements
+                    <Button onClick={() => setRoute("contact")}>Request Proposal</Button>
+                    <Button variant="secondary" onClick={() => scrollToId("example-deliverables")}>
+                      See Example Deliverables
                     </Button>
                   </div>
 
@@ -311,24 +313,29 @@ export default function QuadrelliotWebsite() {
                       RAMS Included
                     </div>
                   </div>
+
+                  {/* trust micro-line */}
+                  <div className="mt-3 text-xs text-zinc-500">
+                    CAA compliant • UK coverage • 48h reporting (typical) • Secure delivery
+                  </div>
                 </div>
 
                 <Card>
-                  <CardHeader title="Core Capability" desc="Built for inspection, reporting and repeatability." />
+                  <CardHeader title="What you get" desc="A clean output your team can act on." />
                   <CardBody>
                     <div className="space-y-4 text-sm text-zinc-300">
                       {[
                         {
-                          title: "Structured Asset Inspection",
-                          desc: "Repeatable capture + clear defect documentation.",
+                          title: "Repeatable capture plan",
+                          desc: "Consistent angles and coverage, built for comparison over time.",
                         },
                         {
-                          title: "Professional Aerial Capture",
-                          desc: "Stills and video with clean deliverables.",
+                          title: "Defect documentation",
+                          desc: "Annotated stills with location context and clear references.",
                         },
                         {
-                          title: "Audit-friendly reporting",
-                          desc: "File naming, structure, and client-ready PDFs.",
+                          title: "Audit-ready delivery",
+                          desc: "Structured folders, clear naming, and client-ready PDFs.",
                         },
                       ].map((item) => (
                         <div key={item.title} className="flex items-start gap-4">
@@ -352,9 +359,48 @@ export default function QuadrelliotWebsite() {
             </Container>
           </div>
 
+          {/* HOW IT WORKS */}
+          <Container>
+            <div className="py-10">
+              <Card>
+                <CardHeader title="How it works" desc="Simple process. Clean outputs. No drama." />
+                <CardBody>
+                  <div className="grid gap-4 md:grid-cols-3">
+                    {[
+                      {
+                        title: "1) Scope + permissions",
+                        desc: "Confirm site, airspace checks, and access constraints. RAMS provided where required.",
+                      },
+                      {
+                        title: "2) Capture (shot plan)",
+                        desc: "Repeatable coverage of roofs, façades and assets — consistent angles for comparison.",
+                      },
+                      {
+                        title: "3) Report delivered",
+                        desc: "Defect log + annotated plates + structured folders for your team.",
+                      },
+                    ].map((s) => (
+                      <div key={s.title} className="rounded-xl border border-white/10 bg-white/5 p-4">
+                        <div className="text-sm font-semibold text-zinc-100">{s.title}</div>
+                        <div className="mt-1 text-sm text-zinc-400">{s.desc}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <Button onClick={() => setRoute("contact")}>Request Proposal</Button>
+                    <Button variant="secondary" onClick={() => setRoute("services")}>
+                      View Services
+                    </Button>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          </Container>
+
           {/* Secondary section */}
           <Container>
-            <div className="grid gap-6 py-14 md:grid-cols-3">
+            <div className="grid gap-6 py-6 md:grid-cols-3">
               <Card>
                 <CardHeader title="Inspection" desc="Evidence you can act on." />
                 <CardBody>
@@ -374,15 +420,81 @@ export default function QuadrelliotWebsite() {
               </Card>
 
               <Card>
-                <CardHeader title="Cinematography" desc="When it needs to look expensive." />
+                <CardHeader title="Cinematography" desc="Select projects (secondary offering)." />
                 <CardBody>
                   <div className="text-sm text-zinc-300">
-                    Professional aerial capture for corporate, branded, and campaign content.
+                    Branded aerial capture when it needs to look expensive. Not the core business — but available.
                   </div>
                 </CardBody>
               </Card>
             </div>
           </Container>
+
+          {/* DELIVERABLES / PROOF */}
+          <div id="example-deliverables" className="border-t border-white/10">
+            <Container>
+              <div className="py-14">
+                <div className="grid gap-6 md:grid-cols-2 md:items-start">
+                  <Card>
+                    <CardHeader title="Deliverables (what you receive)" desc="Structured. Shareable. Auditable." />
+                    <CardBody>
+                      <ul className="space-y-2 text-sm text-zinc-300">
+                        {[
+                          "Annotated photo plates (roof areas / assets clearly referenced)",
+                          "Defect log (ID, location, severity, photo ref, suggested action)",
+                          "Key overview images for quick triage",
+                          "Structured folders + clear filenames",
+                          "Client-ready PDF summary",
+                        ].map((b) => (
+                          <li key={b} className="flex gap-3">
+                            <div className="mt-2 h-1.5 w-1.5 rounded-full bg-white/50" />
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="mt-7 rounded-xl border border-white/10 bg-white/5 p-4">
+                        <div className="text-xs text-zinc-500">Tip</div>
+                        <div className="mt-1 text-sm text-zinc-300">
+                          Add recurring inspections and you’ll get like-for-like comparison across months/quarters.
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+
+                  <Card>
+                    <CardHeader
+                      title="Ideal clients"
+                      desc="Where this saves time, money, or liability."
+                    />
+                    <CardBody>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {[
+                          "Facilities management",
+                          "Property / estates",
+                          "Roofing contractors",
+                          "Construction PMs",
+                          "Industrial sites",
+                          "Local authorities",
+                        ].map((t) => (
+                          <div key={t} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-200">
+                            {t}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-7 flex flex-wrap gap-3">
+                        <Button onClick={() => setRoute("contact")}>Request Proposal</Button>
+                        <Button variant="secondary" onClick={() => setRoute("compliance")}>
+                          Compliance details
+                        </Button>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </div>
+              </div>
+            </Container>
+          </div>
         </div>
       )}
 
@@ -603,7 +715,6 @@ export default function QuadrelliotWebsite() {
               </form>
             </div>
 
-            {/* Direct Contact (no weird copy) */}
             <Card>
               <CardHeader title="Direct Contact" />
               <CardBody>
@@ -640,7 +751,6 @@ export default function QuadrelliotWebsite() {
         </Container>
       )}
 
-      {/* Footer */}
       <div className="border-t border-white/10">
         <Container>
           <div className="flex flex-col gap-4 py-8 md:flex-row md:items-center md:justify-between">
