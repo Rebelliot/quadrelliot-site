@@ -139,6 +139,71 @@ function Button({
   );
 }
 
+function Header({
+  route,
+  setRoute,
+}: {
+  route: Route;
+  setRoute: React.Dispatch<React.SetStateAction<Route>>;
+}) {
+  const navBtn = (r: Route, label: string, variant: "primary" | "secondary" = "secondary") => (
+    <Button
+      variant={variant}
+      onClick={() => setRoute(r)}
+    >
+      {label}
+    </Button>
+  );
+
+  return (
+    <div className="sticky top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur">
+      <Container>
+        <div className="flex items-center justify-between py-5">
+          <button
+            onClick={() => setRoute("home")}
+            className="group flex items-center gap-3 text-left"
+            aria-label="Go to home"
+          >
+            <Image
+              src="/brand/quadrelliot-q.png"
+              alt="Quadrelliot"
+              width={30}
+              height={30}
+              className="opacity-90 transition group-hover:opacity-100"
+              priority
+            />
+            <div className="leading-tight">
+              <div className="text-lg font-semibold tracking-wide">Quadrelliot</div>
+              <div className="text-xs text-zinc-500">Precision Drone Operations · UK</div>
+            </div>
+          </button>
+
+          <nav className="hidden items-center gap-2 md:flex">
+            {navBtn("services", "Services")}
+            {navBtn("compliance", "Compliance")}
+            {navBtn("contact", "Request Proposal", "primary")}
+          </nav>
+
+          <div className="flex items-center gap-2 md:hidden">
+            {navBtn("services", "Services")}
+            {navBtn("contact", "Enquire", "primary")}
+          </div>
+        </div>
+      </Container>
+
+      {/* tiny route indicator (subtle) */}
+      <div className="border-t border-white/5">
+        <Container>
+          <div className="flex items-center justify-between py-2 text-xs text-zinc-600">
+            <div className="capitalize">{route}</div>
+            <div className="hidden sm:block">quadrelliot.co.uk</div>
+          </div>
+        </Container>
+      </div>
+    </div>
+  );
+}
+
 export default function QuadrelliotWebsite() {
   const [route, setRoute] = useState<Route>("home");
   const [service, setService] = useState<ServiceKey>("inspection");
@@ -198,146 +263,127 @@ export default function QuadrelliotWebsite() {
 
   return (
     <div className="min-h-screen bg-black text-zinc-100">
-      {/* Header */}
-      <div className="border-b border-white/10">
-        <Container>
-          <div className="flex items-center justify-between gap-6 py-5">
-            {/* Brand */}
-            <button
-              onClick={() => setRoute("home")}
-              className="flex items-center gap-3 text-left"
-              aria-label="Go to home"
-            >
-              <Image
-                src="/brand/quadrelliot-q.png"
-                alt="Quadrelliot Q mark"
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-lg"
-                priority
-              />
-              <div className="leading-tight">
-                <div className="text-xl font-semibold">Quadrelliot</div>
-                <div className="text-sm text-zinc-400">Precision Drone Operations · UK</div>
-              </div>
-            </button>
-
-            {/* Nav */}
-            <nav className="hidden items-center gap-2 md:flex">
-              <Button variant="secondary" onClick={() => setRoute("services")}>
-                Services
-              </Button>
-              <Button variant="secondary" onClick={() => setRoute("compliance")}>
-                Compliance
-              </Button>
-              <Button onClick={() => setRoute("contact")}>Request Proposal</Button>
-            </nav>
-
-            {/* Mobile */}
-            <div className="flex gap-2 md:hidden">
-              <Button variant="secondary" onClick={() => setRoute("services")}>
-                Services
-              </Button>
-              <Button onClick={() => setRoute("contact")}>Enquire</Button>
-            </div>
-          </div>
-        </Container>
-      </div>
+      <Header route={route} setRoute={setRoute} />
 
       {/* Home */}
       {route === "home" && (
-        <Container>
-          <div className="grid gap-10 py-16 md:grid-cols-2">
-            <div>
-              {/* Big brand hit */}
-              <div className="mb-8">
-                <Image
-                  src="/brand/quadrelliot-wordmark.png"
-                  alt="Quadrelliot"
-                  width={800}
-                  height={260}
-                  className="h-auto w-full max-w-xl opacity-90"
-                  priority
-                />
-              </div>
+        <div>
+          {/* Brand hero slab */}
+          <div className="relative overflow-hidden border-b border-white/10">
+            <div className="absolute inset-0 bg-gradient-to-b from-black via-black to-zinc-950" />
+            <div className="absolute -top-24 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-white/5 blur-3xl" />
+            <div className="absolute -bottom-24 left-1/3 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/5 blur-3xl" />
 
-              <h1 className="text-4xl font-semibold leading-tight">
-                Enterprise-standard drone operations.
-              </h1>
-              <p className="mt-4 max-w-xl text-zinc-400">
-                Inspection-led aerial services with disciplined planning, structured reporting and regulatory compliance.
-              </p>
+            <Container>
+              <div className="relative grid gap-10 py-16 md:grid-cols-2 md:items-center">
+                <div>
+                  <Image
+                    src="/brand/quadrelliot-wordmark.png"
+                    alt="Quadrelliot"
+                    width={900}
+                    height={260}
+                    className="h-auto w-full max-w-xl opacity-90"
+                    priority
+                  />
 
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Button onClick={() => setRoute("services")}>View Services</Button>
-                <Button variant="secondary" onClick={() => setRoute("contact")}>
-                  Submit Requirements
-                </Button>
-              </div>
+                  <h1 className="mt-8 text-4xl font-semibold leading-tight">
+                    Enterprise-standard drone operations.
+                  </h1>
+                  <p className="mt-4 max-w-xl text-zinc-400">
+                    Inspection-led aerial services with disciplined planning, structured reporting and regulatory compliance.
+                  </p>
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-200">
-                  Licensed
-                </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-200">
-                  Insured
-                </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-200">
-                  RAMS Included
-                </div>
-              </div>
-            </div>
-
-            <Card>
-              <CardHeader title="Core Capability" desc="Built for inspection, reporting and repeatability." />
-              <CardBody>
-                <div className="space-y-4 text-sm text-zinc-300">
-                  <div className="flex items-start gap-4">
-                    <Image
-                      src="/brand/quadrelliot-q.png"
-                      alt=""
-                      width={28}
-                      height={28}
-                      className="mt-0.5 h-7 w-7 opacity-70"
-                    />
-                    <div>
-                      <div className="font-medium text-zinc-100">Structured Asset Inspection</div>
-                      <div className="text-zinc-400">Repeatable capture + clear defect documentation.</div>
-                    </div>
+                  <div className="mt-7 flex flex-wrap gap-3">
+                    <Button onClick={() => setRoute("services")}>View Services</Button>
+                    <Button variant="secondary" onClick={() => setRoute("contact")}>
+                      Submit Requirements
+                    </Button>
                   </div>
 
-                  <div className="flex items-start gap-4">
-                    <Image
-                      src="/brand/quadrelliot-q.png"
-                      alt=""
-                      width={28}
-                      height={28}
-                      className="mt-0.5 h-7 w-7 opacity-70"
-                    />
-                    <div>
-                      <div className="font-medium text-zinc-100">Professional Aerial Capture</div>
-                      <div className="text-zinc-400">Stills and video with clean deliverables.</div>
+                  <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                    <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-200">
+                      Licensed
                     </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <Image
-                      src="/brand/quadrelliot-q.png"
-                      alt=""
-                      width={28}
-                      height={28}
-                      className="mt-0.5 h-7 w-7 opacity-70"
-                    />
-                    <div>
-                      <div className="font-medium text-zinc-100">Audit-friendly reporting</div>
-                      <div className="text-zinc-400">File naming, structure, and client-ready PDFs.</div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-200">
+                      Insured
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-200">
+                      RAMS Included
                     </div>
                   </div>
                 </div>
-              </CardBody>
-            </Card>
+
+                <Card>
+                  <CardHeader title="Core Capability" desc="Built for inspection, reporting and repeatability." />
+                  <CardBody>
+                    <div className="space-y-4 text-sm text-zinc-300">
+                      {[
+                        {
+                          title: "Structured Asset Inspection",
+                          desc: "Repeatable capture + clear defect documentation.",
+                        },
+                        {
+                          title: "Professional Aerial Capture",
+                          desc: "Stills and video with clean deliverables.",
+                        },
+                        {
+                          title: "Audit-friendly reporting",
+                          desc: "File naming, structure, and client-ready PDFs.",
+                        },
+                      ].map((item) => (
+                        <div key={item.title} className="flex items-start gap-4">
+                          <Image
+                            src="/brand/quadrelliot-q.png"
+                            alt=""
+                            width={28}
+                            height={28}
+                            className="mt-0.5 h-7 w-7 opacity-70"
+                          />
+                          <div>
+                            <div className="font-medium text-zinc-100">{item.title}</div>
+                            <div className="text-zinc-400">{item.desc}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardBody>
+                </Card>
+              </div>
+            </Container>
           </div>
-        </Container>
+
+          {/* Secondary section */}
+          <Container>
+            <div className="grid gap-6 py-14 md:grid-cols-3">
+              <Card>
+                <CardHeader title="Inspection" desc="Evidence you can act on." />
+                <CardBody>
+                  <div className="text-sm text-zinc-300">
+                    High-resolution stills, consistent angles, and structured reporting for property and assets.
+                  </div>
+                </CardBody>
+              </Card>
+
+              <Card>
+                <CardHeader title="Documentation" desc="Progress without guesswork." />
+                <CardBody>
+                  <div className="text-sm text-zinc-300">
+                    Repeatable site capture for construction and works, delivered cleanly for project teams.
+                  </div>
+                </CardBody>
+              </Card>
+
+              <Card>
+                <CardHeader title="Cinematography" desc="When it needs to look expensive." />
+                <CardBody>
+                  <div className="text-sm text-zinc-300">
+                    Professional aerial capture for corporate, branded, and campaign content.
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          </Container>
+        </div>
       )}
 
       {/* Services */}
@@ -347,7 +393,7 @@ export default function QuadrelliotWebsite() {
             <div className="flex items-end justify-between gap-6">
               <div>
                 <h2 className="text-3xl font-semibold">Services</h2>
-                <p className="mt-2 text-zinc-400">Pick a service. Get the shape of the deliverable.</p>
+                <p className="mt-2 text-zinc-400">Pick a service. See the deliverable shape.</p>
               </div>
               <Button variant="secondary" onClick={() => setRoute("contact")}>
                 Request Proposal
@@ -395,7 +441,7 @@ export default function QuadrelliotWebsite() {
                     ))}
                   </ul>
 
-                  <div className="mt-7 flex gap-3">
+                  <div className="mt-7 flex flex-wrap gap-3">
                     <Button
                       onClick={() => {
                         setServiceWanted(service);
@@ -452,6 +498,28 @@ export default function QuadrelliotWebsite() {
                     <div>Secure file delivery</div>
                     <div>Structured naming & folders</div>
                     <div>Client confidentiality respected</div>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+
+            <div className="mt-10">
+              <Card>
+                <CardHeader title="Deliverables & organisation" desc="How files show up in your inbox/folder." />
+                <CardBody>
+                  <div className="grid gap-4 text-sm text-zinc-300 md:grid-cols-3">
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                      <div className="font-medium text-zinc-100">Naming</div>
+                      <div className="mt-1 text-zinc-400">Clear filenames by area/asset/date.</div>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                      <div className="font-medium text-zinc-100">Structure</div>
+                      <div className="mt-1 text-zinc-400">Folders that map to your site or brief.</div>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                      <div className="font-medium text-zinc-100">Reports</div>
+                      <div className="mt-1 text-zinc-400">PDF summaries where inspection requires it.</div>
+                    </div>
                   </div>
                 </CardBody>
               </Card>
@@ -535,11 +603,11 @@ export default function QuadrelliotWebsite() {
               </form>
             </div>
 
-            {/* Direct Contact (NO weird line) */}
+            {/* Direct Contact (no weird copy) */}
             <Card>
               <CardHeader title="Direct Contact" />
               <CardBody>
-                <div className="flex items-center gap-3 pb-4">
+                <div className="flex items-center gap-3">
                   <Image
                     src="/brand/quadrelliot-q.png"
                     alt="Quadrelliot"
@@ -547,18 +615,23 @@ export default function QuadrelliotWebsite() {
                     height={36}
                     className="h-9 w-9 opacity-90"
                   />
-                  <div className="text-sm text-zinc-400">quadrelliot@gmail.com</div>
+                  <div>
+                    <div className="text-xs text-zinc-500">Email</div>
+                    <div className="text-sm font-medium text-zinc-100">quadrelliot@gmail.com</div>
+                  </div>
                 </div>
 
-                <div className="space-y-3 text-sm text-zinc-300">
-                  <div>
-                    <div className="text-zinc-400">Email</div>
-                    <div className="font-medium text-zinc-100">quadrelliot@gmail.com</div>
+                <div className="mt-6 border-t border-white/10 pt-4">
+                  <div className="text-xs text-zinc-500">Notes</div>
+                  <div className="mt-1 text-sm text-zinc-300">
+                    CAA-compliant operations. Risk assessment per site. Insured.
                   </div>
+                </div>
 
-                  <div className="border-t border-white/10 pt-4">
-                    <div className="text-zinc-400">Notes</div>
-                    <div className="mt-1">CAA-compliant operations. Risk assessment per site. Insured.</div>
+                <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div className="text-xs text-zinc-500">Tip</div>
+                  <div className="mt-1 text-sm text-zinc-300">
+                    If you include site access constraints and deadlines, quotes land faster.
                   </div>
                 </div>
               </CardBody>
