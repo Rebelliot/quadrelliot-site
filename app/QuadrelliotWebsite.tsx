@@ -475,21 +475,26 @@ export default function QuadrelliotWebsite() {
               </form>
             </div>
 
-            <Card>
-              <CardHeader title="Direct Contact" desc="If you prefer email first." />
-              <CardBody>
-                <div className="space-y-3 text-sm text-zinc-300">
-                  <div>
-                    <div className="text-zinc-400">Email</div>
-                    <div className="font-medium text-zinc-100">quadrelliot@gmail.com</div>
-                  </div>
-                  <div className="border-t border-white/10 pt-4">
-                    <div className="text-zinc-400">Notes</div>
-                    <div className="mt-1">CAA-compliant operations. Risk assessment per site. Insured.</div>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
+          <Card>
+  <CardHeader title="Direct Contact" />
+  <CardBody>
+    <div className="space-y-3 text-sm text-zinc-300">
+      <div>
+        <div className="text-zinc-400">Email</div>
+        <div className="font-medium text-zinc-100">
+          quadrelliot@gmail.com
+        </div>
+      </div>
+
+      <div className="border-t border-white/10 pt-4">
+        <div className="text-zinc-400">Notes</div>
+        <div className="mt-1">
+          CAA-compliant operations. Risk assessment per site. Insured.
+        </div>
+      </div>
+    </div>
+  </CardBody>
+</Card>
           </div>
         </Container>
       )}
