@@ -14,10 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Quadrelliot",
+    default: "Quadrelliot | Instant Drone Inspection Reports",
     template: "%s · Quadrelliot",
   },
-  description: "Precision drone inspections and reporting · UK",
+  description:
+    "Commercial drone roof and asset inspections with instant visual reports, annotated findings and clear evidence for property, facilities and construction teams.",
 };
 
 export default function RootLayout({
