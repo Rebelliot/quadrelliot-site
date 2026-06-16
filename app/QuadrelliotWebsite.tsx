@@ -212,8 +212,8 @@ aria-label="Go to home"
 </div>
 );
 }
-export default function QuadrelliotWebsite() {
-const [route, setRoute] = useState<Route>("home");
+export default function QuadrelliotWebsite({ initialRoute = "home" }: { initialRoute?: Route }) {
+const [route, setRoute] = useState<Route>(initialRoute);
 const [service, setService] = useState<ServiceKey>("inspection");
 const [company, setCompany] = useState("");
 const [name, setName] = useState("");
