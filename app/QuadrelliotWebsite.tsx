@@ -1,3 +1,4 @@
+```tsx
 "use client";
 
 import React, { useMemo, useState } from "react";
@@ -6,6 +7,9 @@ import Image from "next/image";
 type Route = "home" | "services" | "compliance" | "contact";
 
 const EMAIL = "quadrelliot@gmail.com";
+const PHONE_DISPLAY = "07732 272022";
+const PHONE_LINK = "+447732272022";
+const WHATSAPP_LINK = "https://wa.me/447732272022";
 
 const Container = ({ children }: { children: React.ReactNode }) => (
   <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">{children}</div>
@@ -15,23 +19,23 @@ const SERVICES = {
   inspection: {
     title: "Commercial Roof Inspection",
     short: "Roofs, gutters, façades and visible defects.",
-    desc: "High-resolution drone roof inspection with clear visual evidence and a fast report your team can use immediately.",
+    desc: "Drone roof inspection for commercial buildings, with clear visual evidence and an inspection report produced quickly after the flight.",
     bullets: [
       "Commercial roofs, gutters, façades and hard-to-access areas",
-      "Clear still images captured safely from ground level",
-      "Marked-up findings showing visible issues and locations",
-      "Instant or same-day report available depending on scope",
+      "High-resolution still images captured safely from ground level",
+      "Marked-up findings showing visible defects, concern areas and locations",
+      "Inspection report ready within an hour of the flight taking place",
     ],
   },
   asset: {
     title: "Asset Inspection",
-    short: "Sites, structures and external assets.",
+    short: "External assets, sites and structures.",
     desc: "Aerial inspection for property, industrial and infrastructure assets where safe access, speed and evidence matter.",
     bullets: [
       "External asset condition capture",
       "Overview images plus close visual details",
-      "Structured folders and clear image references",
-      "Useful evidence for maintenance, contractors or client records",
+      "Structured image delivery with clear references",
+      "Useful evidence for maintenance teams, contractors and client records",
     ],
   },
   progress: {
@@ -42,7 +46,7 @@ const SERVICES = {
       "Scheduled site progress imagery",
       "Repeatable angles for comparison",
       "Clean delivery for project teams and stakeholders",
-      "Optional short summary report after each visit",
+      "Optional short report after each visit",
     ],
   },
 } as const;
@@ -103,6 +107,19 @@ function SelectNative(
   );
 }
 
+function buttonClasses(variant: "primary" | "secondary" | "dark" = "primary") {
+  const base =
+    "inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-orange-500/30";
+  const styles =
+    variant === "primary"
+      ? "bg-orange-500 text-slate-950 hover:bg-orange-400"
+      : variant === "dark"
+      ? "bg-slate-950 text-white hover:bg-slate-800"
+      : "border border-slate-300 bg-white text-slate-950 hover:bg-slate-50";
+
+  return `${base} ${styles}`;
+}
+
 function Button({
   children,
   variant = "primary",
@@ -114,19 +131,33 @@ function Button({
   onClick?: () => void;
   type?: "button" | "submit";
 }) {
-  const base =
-    "inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-orange-500/30";
-  const styles =
-    variant === "primary"
-      ? "bg-orange-500 text-slate-950 hover:bg-orange-400"
-      : variant === "dark"
-      ? "bg-slate-950 text-white hover:bg-slate-800"
-      : "border border-slate-300 bg-white text-slate-950 hover:bg-slate-50";
-
   return (
-    <button type={type} onClick={onClick} className={`${base} ${styles}`}>
+    <button type={type} onClick={onClick} className={buttonClasses(variant)}>
       {children}
     </button>
+  );
+}
+
+function LinkButton({
+  children,
+  href,
+  variant = "secondary",
+  target,
+}: {
+  children: React.ReactNode;
+  href: string;
+  variant?: "primary" | "secondary" | "dark";
+  target?: "_blank";
+}) {
+  return (
+    <a
+      href={href}
+      target={target}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
+      className={buttonClasses(variant)}
+    >
+      {children}
+    </a>
   );
 }
 
@@ -209,11 +240,16 @@ function Header({
           <nav className="hidden items-center gap-2 md:flex">
             {navBtn("services", "Services")}
             {navBtn("compliance", "Compliance")}
+            <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
+              Text / WhatsApp
+            </LinkButton>
             {navBtn("contact", "Request Inspection", "primary")}
           </nav>
 
           <div className="flex items-center gap-2 md:hidden">
-            {navBtn("services", "Services")}
+            <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
+              Text
+            </LinkButton>
             {navBtn("contact", "Enquire", "primary")}
           </div>
         </div>
@@ -308,27 +344,34 @@ export default function QuadrelliotWebsite() {
                   />
 
                   <div className="mt-8 inline-flex rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold text-slate-900">
-                    Fast commercial drone inspections.
+                    Instant on-site drone inspection reports.
                   </div>
 
                   <h1 className="mt-6 max-w-3xl text-5xl font-bold leading-[0.98] tracking-tight text-slate-950 sm:text-6xl">
-                    Drone Roof Inspections with Instant Reports.
+                    Commercial drone inspections with reports ready fast.
                   </h1>
 
                   <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-700">
-                    Clear aerial images, marked-up findings and fast report turnaround for commercial property,
-                    facilities and construction teams.
+                    Quadrelliot provides commercial roof and asset inspections with clear aerial images,
+                    marked-up findings and a report ready within an hour of the flight taking place.
                   </p>
 
                   <div className="mt-8 flex flex-wrap gap-3">
                     <Button onClick={() => setRoute("contact")}>Request Inspection</Button>
+                    <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
+                      Text / WhatsApp
+                    </LinkButton>
                     <Button variant="secondary" onClick={() => scrollToId("what-you-get")}>
                       See What You Get
                     </Button>
                   </div>
 
                   <div className="mt-8 flex flex-wrap gap-3 text-sm text-slate-700">
-                    {["Commercial roofs", "Marked-up findings", "Same-day delivery available"].map((item) => (
+                    {[
+                      "Commercial roofs",
+                      "Marked-up findings",
+                      "Report ready within an hour",
+                    ].map((item) => (
                       <div key={item} className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
                         {item}
                       </div>
@@ -336,7 +379,7 @@ export default function QuadrelliotWebsite() {
                   </div>
 
                   <div className="mt-4 text-sm text-slate-500">
-                    Hampshire based · UK work considered · CAA-compliant operations · Insured · RAMS available
+                    UK commercial work considered · CAA-compliant operations · Insured · RAMS available
                   </div>
                 </div>
 
@@ -351,23 +394,23 @@ export default function QuadrelliotWebsite() {
                     />
                     <div>
                       <div className="text-sm text-orange-300">Core offer</div>
-                      <div className="text-2xl font-bold">Clear inspection evidence, delivered fast.</div>
+                      <div className="text-2xl font-bold">Flight, evidence, report — without the delay.</div>
                     </div>
                   </div>
 
                   <div className="mt-8 space-y-4">
                     {[
                       {
-                        title: "1. Safe aerial inspection",
-                        desc: "Roofs, façades, gutters and external assets captured without unnecessary access equipment.",
+                        title: "1. Inspect safely",
+                        desc: "Roofs, façades, gutters and external assets captured without unnecessary roof access or scaffolding.",
                       },
                       {
-                        title: "2. Useful visual evidence",
-                        desc: "Clear images organised around the areas your team actually needs to understand.",
+                        title: "2. Mark the evidence",
+                        desc: "Clear images organised around what your team needs to see: locations, defects and visible concern areas.",
                       },
                       {
-                        title: "3. Fast report turnaround",
-                        desc: "A clean inspection report prepared quickly for owners, contractors or facilities teams.",
+                        title: "3. Send the report",
+                        desc: "A clean visual report produced quickly so owners, contractors and facilities teams can act sooner.",
                       },
                     ].map((item) => (
                       <div key={item.title} className="rounded-xl border border-white/10 bg-white/5 p-4">
@@ -375,6 +418,14 @@ export default function QuadrelliotWebsite() {
                         <div className="mt-1 text-sm leading-6 text-slate-300">{item.desc}</div>
                       </div>
                     ))}
+                  </div>
+
+                  <div className="mt-6 rounded-xl border border-orange-500/30 bg-orange-500/10 p-4 text-sm leading-6 text-orange-100">
+                    Need to move quickly? Text or WhatsApp{" "}
+                    <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="font-bold text-orange-300">
+                      {PHONE_DISPLAY}
+                    </a>
+                    .
                   </div>
                 </DarkPanel>
               </div>
@@ -387,7 +438,7 @@ export default function QuadrelliotWebsite() {
                 <div className="max-w-2xl">
                   <h2 className="text-3xl font-bold tracking-tight">What you get</h2>
                   <p className="mt-3 text-slate-600">
-                    A practical inspection package: images, marked-up findings and a report your team can send on.
+                    A practical inspection package: aerial evidence, marked-up findings and a report your team can actually use.
                   </p>
                 </div>
 
@@ -399,11 +450,11 @@ export default function QuadrelliotWebsite() {
                     },
                     {
                       title: "Marked-up findings",
-                      desc: "Clear image markups showing visible issues, areas of concern and useful visual references.",
+                      desc: "Clear image markups showing visible defects, locations, areas of concern and useful visual references.",
                     },
                     {
-                      title: "Fast report",
-                      desc: "A clean visual report generated quickly after the inspection, ready to send to your team or contractor.",
+                      title: "Instant reporting workflow",
+                      desc: "A clean visual report prepared fast, with reports ready within an hour of the flight taking place.",
                     },
                   ].map((item) => (
                     <Card key={item.title}>
@@ -504,7 +555,7 @@ export default function QuadrelliotWebsite() {
                 <div>
                   <h1 className="text-4xl font-bold tracking-tight">Services</h1>
                   <p className="mt-2 max-w-2xl text-slate-600">
-                    Simple commercial drone services, centred on fast reporting and clear visual evidence.
+                    Commercial drone services centred on fast reporting, clear visual evidence and practical delivery.
                   </p>
                 </div>
                 <Button onClick={() => setRoute("contact")}>Request Inspection</Button>
@@ -560,6 +611,9 @@ export default function QuadrelliotWebsite() {
                       >
                         Request this service
                       </Button>
+                      <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
+                        Text / WhatsApp
+                      </LinkButton>
                       <Button variant="secondary" onClick={() => setRoute("home")}>
                         Back to Home
                       </Button>
@@ -579,8 +633,8 @@ export default function QuadrelliotWebsite() {
               <div className="max-w-2xl">
                 <h1 className="text-4xl font-bold tracking-tight">Compliance</h1>
                 <p className="mt-3 text-slate-600">
-                  The inspection should be quick for the client, not casual behind the scenes. Site checks, risk assessment
-                  and operating limits are handled properly.
+                  Fast reporting does not mean casual operation. Site checks, risk assessment and operating limits are
+                  handled properly before the drone goes up.
                 </p>
               </div>
 
@@ -628,7 +682,12 @@ export default function QuadrelliotWebsite() {
                         Send the site location, what needs checking and how quickly you need the report.
                       </div>
                     </div>
-                    <Button onClick={() => setRoute("contact")}>Request Inspection</Button>
+                    <div className="flex flex-wrap gap-3">
+                      <Button onClick={() => setRoute("contact")}>Request Inspection</Button>
+                      <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
+                        Text / WhatsApp
+                      </LinkButton>
+                    </div>
                   </div>
                 </DarkPanel>
               </div>
@@ -715,13 +774,18 @@ export default function QuadrelliotWebsite() {
                     />
                   </div>
 
-                  <Button type="submit">Submit Enquiry</Button>
+                  <div className="flex flex-wrap gap-3">
+                    <Button type="submit">Submit Enquiry</Button>
+                    <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
+                      Text / WhatsApp instead
+                    </LinkButton>
+                  </div>
                 </form>
               </div>
 
               <div className="space-y-5">
                 <DarkPanel className="p-6">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-start gap-4">
                     <Image
                       src="/brand/quadrelliot-q.png"
                       alt="Quadrelliot"
@@ -731,12 +795,35 @@ export default function QuadrelliotWebsite() {
                     />
                     <div>
                       <div className="text-sm text-orange-300">Direct contact</div>
-                      <div className="font-semibold">{EMAIL}</div>
+
+                      <div className="mt-2 space-y-2 text-sm">
+                        <a href={`mailto:${EMAIL}`} className="block font-semibold text-white hover:text-orange-300">
+                          {EMAIL}
+                        </a>
+
+                        <a href={`tel:${PHONE_LINK}`} className="block font-semibold text-white hover:text-orange-300">
+                          Call: {PHONE_DISPLAY}
+                        </a>
+
+                        <a href={`sms:${PHONE_LINK}`} className="block font-semibold text-white hover:text-orange-300">
+                          Text: {PHONE_DISPLAY}
+                        </a>
+
+                        <a
+                          href={WHATSAPP_LINK}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block font-semibold text-white hover:text-orange-300"
+                        >
+                          WhatsApp: {PHONE_DISPLAY}
+                        </a>
+                      </div>
                     </div>
                   </div>
 
                   <div className="mt-6 border-t border-white/10 pt-5 text-sm leading-6 text-slate-300">
-                    Based in Hampshire. Commercial drone inspections, fast reporting and clear visual deliverables.
+                    Commercial drone inspections, fast reporting and clear visual deliverables. Reports are built into
+                    the inspection workflow, with delivery ready within an hour of the flight taking place.
                   </div>
                 </DarkPanel>
 
@@ -775,6 +862,17 @@ export default function QuadrelliotWebsite() {
               <div className="mt-1 text-sm text-slate-500">
                 Instant drone inspection reports · United Kingdom
               </div>
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
+                <a href={`mailto:${EMAIL}`} className="hover:text-orange-600">
+                  {EMAIL}
+                </a>
+                <a href={`tel:${PHONE_LINK}`} className="hover:text-orange-600">
+                  {PHONE_DISPLAY}
+                </a>
+                <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="hover:text-orange-600">
+                  WhatsApp
+                </a>
+              </div>
             </div>
 
             <Image
@@ -790,3 +888,4 @@ export default function QuadrelliotWebsite() {
     </div>
   );
 }
+```
