@@ -387,25 +387,36 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                 {
                   title: "Aerial inspection",
                   desc: "High-resolution roof, facade or asset imagery captured safely from ground level.",
+                  image: "/images/drone-inspection-closeup.JPG",
+                  alt: "Close-up of a Quadrelliot inspection drone and camera",
+                  imageClass: "object-cover object-[58%_50%]",
                 },
                 {
-                  title: "Marked-up findings",
+                  title: "Documented findings",
                   desc: "Clear image markups showing visible defects, locations, areas of concern and useful visual references.",
+                  image: "/images/report-example-page.jpg",
+                  alt: "Quadrelliot inspection report showing a documented roof defect",
+                  imageClass: "object-cover object-[center_62%]",
                 },
                 {
                   title: "Fast report",
                   desc: "A clean visual report written after the inspection, ready to send to your team or contractor nearly immediately.",
+                  image: "/images/report-example-page.jpg",
+                  alt: "Quadrelliot aerial roof inspection report page",
+                  imageClass: "object-cover object-top",
                 },
               ].map((item) => (
-                <Card key={item.title}>
-                  <CardBody>
+                <Card key={item.title} className="overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden border-b border-slate-200 bg-slate-100">
                     <Image
-                      src="/brand/quadrelliot-q.png"
-                      alt=""
-                      width={38}
-                      height={38}
-                      className="mb-5 h-9 w-9"
+                      src={item.image}
+                      alt={item.alt}
+                      fill
+                      sizes="(min-width: 1280px) 352px, (min-width: 768px) calc((100vw - 5rem) / 3), calc(100vw - 2rem)"
+                      className={item.imageClass}
                     />
+                  </div>
+                  <CardBody>
                     <div className="text-lg font-bold text-slate-950">{item.title}</div>
                     <div className="mt-2 text-sm leading-6 text-slate-600">{item.desc}</div>
                   </CardBody>
