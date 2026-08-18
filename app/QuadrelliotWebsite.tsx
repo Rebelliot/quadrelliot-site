@@ -196,14 +196,20 @@ aria-label="Go to home"
       <nav className="hidden items-center gap-2 md:flex">
         {navBtn("services", "Services")}
         {navBtn("compliance", "Compliance")}
+        <a
+          href={"tel:" + PHONE_LINK}
+          className="inline-flex h-11 items-center whitespace-nowrap px-2 text-sm font-semibold text-slate-700 transition hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
+        >
+          {PHONE_DISPLAY}
+        </a>
         <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
           Text / WhatsApp
         </LinkButton>
         {navBtn("contact", "Request Inspection", "primary")}
       </nav>
       <div className="flex items-center gap-2 md:hidden">
-        <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
-          Text
+        <LinkButton href={"tel:" + PHONE_LINK} variant="secondary">
+          Call
         </LinkButton>
         {navBtn("contact", "Enquire", "primary")}
       </div>
@@ -277,7 +283,7 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
           <div className="relative grid gap-10 py-10 md:grid-cols-[1.05fr_0.95fr] md:items-center md:py-14 lg:py-16">
             <div>
               <div className="inline-flex rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold text-slate-900">
-                Instant on-site drone inspection reports.
+                Instant on-site drone inspection reports
               </div>
               <h1 className="mt-6 max-w-3xl text-5xl font-bold leading-[0.98] tracking-tight text-slate-950 sm:text-6xl">
                 Commercial drone inspections with reports ready fast.
@@ -315,6 +321,59 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                 className="h-auto w-full"
                 priority
               />
+            </div>
+          </div>
+        </Container>
+      </section>
+      <section id="what-you-get" className="bg-white">
+        <Container>
+          <div className="py-14">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl font-bold tracking-tight">What you get</h2>
+              <p className="mt-3 text-slate-600">
+                A practical inspection package: aerial evidence, marked-up findings and a report your team can actually use.
+              </p>
+            </div>
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+              {[
+                {
+                  title: "Aerial inspection",
+                  desc: "High-resolution roof, facade or asset imagery captured safely from ground level.",
+                  image: "/images/drone-inspection-closeup.JPG",
+                  alt: "Close-up of a Quadrelliot inspection drone and camera",
+                  imageClass: "object-cover object-[58%_50%]",
+                },
+                {
+                  title: "Documented findings",
+                  desc: "Clear image markups showing visible defects, locations, areas of concern and useful visual references.",
+                  image: "/images/report-example-page.jpg",
+                  alt: "Quadrelliot inspection report showing a documented roof defect",
+                  imageClass: "object-cover object-[center_62%]",
+                },
+                {
+                  title: "Fast report",
+                  desc: "A clean visual report written after the inspection, ready to send to your team or contractor nearly immediately.",
+                  image: "/images/report-example-page.jpg",
+                  alt: "Quadrelliot aerial roof inspection report page",
+                  imageClass: "object-cover object-top",
+                },
+              ].map((item) => (
+                <Card key={item.title} className="overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden border-b border-slate-200 bg-slate-100">
+                    <Image
+                      src={item.image}
+                      alt={item.alt}
+                      fill
+                      sizes="(min-width: 1280px) 352px, (min-width: 768px) calc((100vw - 5rem) / 3), calc(100vw - 2rem)"
+                      className={item.imageClass}
+                    />
+                  </div>
+                  <CardBody>
+                    <div className="text-lg font-bold text-slate-950">{item.title}</div>
+                    <div className="mt-2 text-sm leading-6 text-slate-600">{item.desc}</div>
+                  </CardBody>
+                </Card>
+              ))}
             </div>
           </div>
         </Container>
@@ -370,59 +429,6 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                 .
               </div>
             </DarkPanel>
-          </div>
-        </Container>
-      </section>
-      <section id="what-you-get" className="bg-white">
-        <Container>
-          <div className="py-14">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl font-bold tracking-tight">What you get</h2>
-              <p className="mt-3 text-slate-600">
-                A practical inspection package: aerial evidence, marked-up findings and a report your team can actually use.
-              </p>
-            </div>
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
-              {[
-                {
-                  title: "Aerial inspection",
-                  desc: "High-resolution roof, facade or asset imagery captured safely from ground level.",
-                  image: "/images/drone-inspection-closeup.JPG",
-                  alt: "Close-up of a Quadrelliot inspection drone and camera",
-                  imageClass: "object-cover object-[58%_50%]",
-                },
-                {
-                  title: "Documented findings",
-                  desc: "Clear image markups showing visible defects, locations, areas of concern and useful visual references.",
-                  image: "/images/report-example-page.jpg",
-                  alt: "Quadrelliot inspection report showing a documented roof defect",
-                  imageClass: "object-cover object-[center_62%]",
-                },
-                {
-                  title: "Fast report",
-                  desc: "A clean visual report written after the inspection, ready to send to your team or contractor nearly immediately.",
-                  image: "/images/report-example-page.jpg",
-                  alt: "Quadrelliot aerial roof inspection report page",
-                  imageClass: "object-cover object-top",
-                },
-              ].map((item) => (
-                <Card key={item.title} className="overflow-hidden">
-                  <div className="relative aspect-[4/3] overflow-hidden border-b border-slate-200 bg-slate-100">
-                    <Image
-                      src={item.image}
-                      alt={item.alt}
-                      fill
-                      sizes="(min-width: 1280px) 352px, (min-width: 768px) calc((100vw - 5rem) / 3), calc(100vw - 2rem)"
-                      className={item.imageClass}
-                    />
-                  </div>
-                  <CardBody>
-                    <div className="text-lg font-bold text-slate-950">{item.title}</div>
-                    <div className="mt-2 text-sm leading-6 text-slate-600">{item.desc}</div>
-                  </CardBody>
-                </Card>
-              ))}
-            </div>
           </div>
         </Container>
       </section>
