@@ -292,7 +292,13 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                 Quadrelliot provides commercial roof and asset inspections with clear aerial images,
                 marked-up findings and a report ready within an hour of the flight taking place.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-4 text-base font-semibold text-slate-700">
+                Call or text{" "}
+                <a href={"tel:" + PHONE_LINK} className="whitespace-nowrap text-slate-950 underline decoration-orange-500 underline-offset-4 hover:text-orange-600">
+                  {PHONE_DISPLAY}
+                </a>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
                 <Button onClick={() => setRoute("contact")}>Request Inspection</Button>
                 <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
                   Text / WhatsApp
