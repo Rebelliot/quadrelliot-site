@@ -274,17 +274,9 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
         <div className="absolute -right-32 top-8 h-[420px] w-[420px] rounded-full bg-orange-500/10 blur-3xl" />
         <div className="absolute -left-24 bottom-0 h-[360px] w-[360px] rounded-full bg-slate-900/5 blur-3xl" />
         <Container>
-          <div className="relative grid gap-10 py-14 md:grid-cols-[1.05fr_0.95fr] md:items-center lg:py-20">
+          <div className="relative grid gap-10 py-10 md:grid-cols-[1.05fr_0.95fr] md:items-center md:py-14 lg:py-16">
             <div>
-              <Image
-                src="/brand/quadrelliot-wordmark.png"
-                alt="Quadrelliot"
-                width={920}
-                height={260}
-                className="h-auto w-full max-w-xl"
-                priority
-              />
-              <div className="mt-8 inline-flex rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold text-slate-900">
+              <div className="inline-flex rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold text-slate-900">
                 Instant on-site drone inspection reports.
               </div>
               <h1 className="mt-6 max-w-3xl text-5xl font-bold leading-[0.98] tracking-tight text-slate-950 sm:text-6xl">
@@ -303,32 +295,48 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                   See What You Get
                 </Button>
               </div>
-              <div className="mt-8 flex flex-wrap gap-3 text-sm text-slate-700">
+              <div className="mt-7 flex flex-wrap gap-x-4 gap-y-1 text-sm font-medium text-slate-600">
                 {["Commercial roofs", "Marked-up findings", "Report ready within an hour"].map((item) => (
-                  <div key={item} className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
-                    {item}
-                  </div>
+                  <span key={item}>{item}</span>
                 ))}
               </div>
-              <div className="mt-4 text-sm text-slate-500">
-                UK commercial work considered · CAA-compliant operations · Insured · RAMS available
+              <div className="mt-3 text-sm leading-6 text-slate-500">
+                UK commercial work considered · CAA-compliant operations ·{" "}
+                <span className="whitespace-nowrap">Insured · RAMS available</span>
               </div>
             </div>
-            <DarkPanel className="p-7">
-              <div className="flex items-center gap-4">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <Image
+                src="/images/hero-drone-inspection.jpg"
+                alt="Quadrelliot drone operator carrying out a commercial drone inspection"
+                width={2400}
+                height={1600}
+                sizes="(min-width: 1280px) 520px, (min-width: 768px) 46vw, calc(100vw - 2rem)"
+                className="h-auto w-full"
+                priority
+              />
+            </div>
+          </div>
+        </Container>
+      </section>
+      <section className="border-b border-slate-200 bg-white">
+        <Container>
+          <div className="py-10">
+            <DarkPanel className="p-5 sm:p-6">
+              <div className="flex items-center gap-3">
                 <Image
                   src="/brand/quadrelliot-q.png"
                   alt=""
-                  width={74}
-                  height={74}
-                  className="rounded-2xl bg-white p-2"
+                  width={50}
+                  height={50}
+                  className="rounded-xl bg-white p-1.5"
                 />
                 <div>
-                  <div className="text-sm text-orange-300">Core offer</div>
-                  <div className="text-2xl font-bold">Flight, evidence, report - without the delay.</div>
+                  <div className="text-xs text-orange-300">Core offer</div>
+                  <div className="text-lg font-bold">Flight, evidence, report - without the delay.</div>
                 </div>
               </div>
-              <div className="mt-8 space-y-4">
+              <div className="mt-5 grid gap-2 md:grid-cols-3">
                 {[
                   {
                     title: "1. Inspect safely",
@@ -343,13 +351,13 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                     desc: "A clean visual report written after the inspection, ready to send to your team or contractor nearly immediately.",
                   },
                 ].map((item) => (
-                  <div key={item.title} className="rounded-xl border border-white/10 bg-white/5 p-4">
-                    <div className="font-semibold text-white">{item.title}</div>
-                    <div className="mt-1 text-sm leading-6 text-slate-300">{item.desc}</div>
+                  <div key={item.title} className="rounded-xl border border-white/10 bg-white/5 p-3">
+                    <div className="text-sm font-semibold text-white">{item.title}</div>
+                    <div className="mt-1 text-xs leading-5 text-slate-300">{item.desc}</div>
                   </div>
                 ))}
               </div>
-              <div className="mt-6 rounded-xl border border-orange-500/30 bg-orange-500/10 p-4 text-sm leading-6 text-orange-100">
+              <div className="mt-4 rounded-xl border border-orange-500/30 bg-orange-500/10 p-3 text-xs leading-5 text-orange-100">
                 Need to move quickly? Text or WhatsApp{" "}
                 <a
                   href={WHATSAPP_LINK}
