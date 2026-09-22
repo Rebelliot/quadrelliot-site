@@ -1,6 +1,17 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import Image from "next/image";
+
+declare global {
+interface Window {
+gtag?: (
+command: "event",
+eventName: "conversion",
+parameters: { send_to: string }
+) => void;
+}
+}
+
 type Route = "home" | "services" | "compliance" | "contact";
 const EMAIL = "quadrelliot@gmail.com";
 const PHONE_DISPLAY = "07732 272022";
@@ -108,13 +119,15 @@ children,
 variant = "primary",
 onClick,
 type = "button",
+disabled = false,
 }: {
 children: React.ReactNode;
 variant?: "primary" | "secondary" | "dark";
 onClick?: () => void;
 type?: "button" | "submit";
+disabled?: boolean;
 }) {
-return ( <button type={type} onClick={onClick} className={buttonClasses(variant)}>
+return ( <button type={type} onClick={onClick} disabled={disabled} className={buttonClasses(variant)}>
 {children} </button>
 );
 }
@@ -229,6 +242,9 @@ const [postcode, setPostcode] = useState("");
 const [serviceWanted, setServiceWanted] = useState<ServiceKey>("inspection");
 const [deadline, setDeadline] = useState("asap");
 const [scope, setScope] = useState("");
+const [submissionState, setSubmissionState] = useState<"idle" | "submitting" | "success" | "error">("idle");
+const [submissionError, setSubmissionError] = useState("");
+const submissionInProgress = useRef(false);
 const serviceKeys = useMemo(() => Object.keys(SERVICES) as ServiceKey[], []);
 const current = useMemo(() => SERVICES[service], [service]);
 const serviceOptions = useMemo(
@@ -248,25 +264,56 @@ const deadlineOptions = useMemo(
 ],
 []
 );
-function submitEnquiry(event: React.FormEvent) {
+async function submitEnquiry(event: React.FormEvent<HTMLFormElement>) {
 event.preventDefault();
-const subject = encodeURIComponent("Quadrelliot - Inspection Enquiry");
-const timingLabel = deadlineOptions.find((item) => item.value === deadline)?.label ?? deadline;
-const body = encodeURIComponent(
-  [
-    "Company: " + (company || "-"),
-    "Name: " + (name || "-"),
-    "Email: " + email,
-    "Phone: " + (phone || "-"),
-    "Location/Postcode: " + (postcode || "-"),
-    "Service: " + SERVICES[serviceWanted].title,
-    "Timing: " + timingLabel,
-    "",
-    "What needs inspecting / reporting:",
-    scope,
-  ].join("\n")
+if (submissionInProgress.current) return;
+
+submissionInProgress.current = true;
+setSubmissionState("submitting");
+setSubmissionError("");
+
+try {
+const response = await fetch("/api/contact", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+company,
+name,
+email,
+phone,
+postcode,
+service: serviceWanted,
+deadline,
+scope,
+}),
+});
+const result = (await response.json().catch(() => null)) as
+| { success?: boolean; error?: string }
+| null;
+
+if (!response.ok || !result?.success) {
+throw new Error(result?.error || "Your enquiry could not be sent. Please try again.");
+}
+
+setSubmissionState("success");
+
+try {
+if (typeof window.gtag === "function") {
+window.gtag("event", "conversion", {
+send_to: "AW-18243911087/RRriCO-KnugcEK_7r_tD",
+});
+}
+} catch {
+// Tracking must never change the successful form outcome.
+}
+} catch (error) {
+setSubmissionState("error");
+setSubmissionError(
+error instanceof Error ? error.message : "Your enquiry could not be sent. Please try again."
 );
-window.location.href = "mailto:" + EMAIL + "?subject=" + subject + "&body=" + body;
+} finally {
+submissionInProgress.current = false;
+}
 }
 function scrollToId(id: string) {
 const el = document.getElementById(id);
@@ -724,11 +771,23 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                 />
               </div>
               <div className="flex flex-wrap gap-3">
-                <Button type="submit">Submit Enquiry</Button>
+                <Button type="submit" disabled={submissionState === "submitting"}>
+                  {submissionState === "submitting" ? "Sending…" : "Submit Enquiry"}
+                </Button>
                 <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
                   Text / WhatsApp instead
                 </LinkButton>
               </div>
+              {submissionState === "success" ? (
+                <div role="status" className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-700">
+                  Thank you. Your enquiry has been sent successfully and I will be in touch shortly.
+                </div>
+              ) : null}
+              {submissionState === "error" ? (
+                <div role="alert" className="rounded-xl border border-orange-500/30 bg-orange-500/10 p-4 text-sm text-slate-800">
+                  {submissionError}
+                </div>
+              ) : null}
             </form>
           </div>
           <div className="space-y-5">
