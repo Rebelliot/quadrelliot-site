@@ -1,6 +1,14 @@
 "use client";
 import React, { useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import {
+ENQUIRY_SERVICE_OPTIONS,
+isEnquiryServiceKey,
+PREFERRED_CONTACT_OPTIONS,
+type EnquiryServiceKey,
+type PreferredContactMethod,
+} from "@/lib/enquiry";
 
 declare global {
 interface Window {
@@ -12,7 +20,7 @@ parameters: { send_to: string }
 }
 }
 
-type Route = "home" | "services" | "compliance" | "contact";
+type Route = "home" | "services" | "prices" | "compliance" | "contact";
 const EMAIL = "quadrelliot@gmail.com";
 const PHONE_DISPLAY = "07732 272022";
 const PHONE_LINK = "+447732272022";
@@ -56,8 +64,8 @@ bullets: [
 },
 } as const;
 type ServiceKey = keyof typeof SERVICES;
-function FieldLabel({ children }: { children: React.ReactNode }) {
-return <div className="text-sm font-medium text-slate-700">{children}</div>;
+function FieldLabel({ children, htmlFor }: { children: React.ReactNode; htmlFor: string }) {
+return <label htmlFor={htmlFor} className="text-sm font-medium text-slate-700">{children}</label>;
 }
 function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
 return (
@@ -103,9 +111,11 @@ className={[
 ))} </select>
 );
 }
-function buttonClasses(variant: "primary" | "secondary" | "dark" = "primary") {
+type ButtonVariant = "primary" | "secondary" | "dark";
+
+function buttonClasses(variant: ButtonVariant = "primary") {
 const base =
-"inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-orange-500/30";
+"inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-orange-500/30 disabled:cursor-not-allowed disabled:opacity-60";
 if (variant === "primary") {
 return base + " bg-orange-500 text-slate-950 hover:bg-orange-400";
 }
@@ -122,7 +132,7 @@ type = "button",
 disabled = false,
 }: {
 children: React.ReactNode;
-variant?: "primary" | "secondary" | "dark";
+variant?: ButtonVariant;
 onClick?: () => void;
 type?: "button" | "submit";
 disabled?: boolean;
@@ -139,7 +149,7 @@ target,
 }: {
 children: React.ReactNode;
 href: string;
-variant?: "primary" | "secondary" | "dark";
+variant?: ButtonVariant;
 target?: "_blank";
 }) {
 return (
@@ -184,18 +194,14 @@ return (
 {children} </div>
 );
 }
-function Header({
-setRoute,
-}: {
-setRoute: React.Dispatch<React.SetStateAction<Route>>;
-}) {
-const navBtn = (route: Route, label: string, variant: "primary" | "secondary" | "dark" = "secondary") => (
+function Header({ setRoute }: { setRoute: React.Dispatch<React.SetStateAction<Route>> }) {
+const navBtn = (route: Route, label: string, variant: ButtonVariant = "secondary") => (
 <Button variant={variant} onClick={() => setRoute(route)}>
 {label} </Button>
 );
 return ( <div className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur"> <Container> <div className="flex items-center justify-between py-4">
-<button
-onClick={() => setRoute("home")}
+<Link
+href="/"
 className="group flex items-center gap-3 text-left"
 aria-label="Go to home"
 > <Image
@@ -205,8 +211,8 @@ aria-label="Go to home"
            height={38}
            className="h-9 w-9 transition group-hover:scale-[1.03]"
            priority
-         /> <div className="leading-tight"> <div className="text-lg font-bold tracking-wide text-slate-950">Quadrelliot</div> <div className="text-xs text-slate-500">Instant drone inspection reports</div> </div> </button>
-      <nav className="hidden items-center gap-2 md:flex">
+         /> <div className="leading-tight"> <div className="text-lg font-bold tracking-wide text-slate-950">Quadrelliot</div> <div className="hidden text-xs text-slate-500 sm:block">Instant drone inspection reports</div> </div> </Link>
+      <nav className="hidden items-center gap-2 lg:flex">
         {navBtn("services", "Services")}
         {navBtn("compliance", "Compliance")}
         <a
@@ -218,52 +224,53 @@ aria-label="Go to home"
         <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
           Text / WhatsApp
         </LinkButton>
-        {navBtn("contact", "Request Inspection", "primary")}
+        <LinkButton href="/prices" variant="primary">Prices</LinkButton>
+        <LinkButton href="/contact" variant="primary">Request Inspection</LinkButton>
       </nav>
-      <div className="flex items-center gap-2 md:hidden">
-        <LinkButton href={"tel:" + PHONE_LINK} variant="secondary">
-          Call
-        </LinkButton>
-        {navBtn("contact", "Enquire", "primary")}
+      <div className="flex items-center gap-2 lg:hidden">
+        <Link href="/contact" className={buttonClasses("primary")}>Enquire</Link>
+        <details className="group relative">
+          <summary className={`${buttonClasses("secondary")} cursor-pointer list-none [&::-webkit-details-marker]:hidden`}>
+            Menu
+          </summary>
+          <nav className="absolute right-0 top-13 z-50 grid w-[min(20rem,calc(100vw-2rem))] gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl">
+            <button onClick={() => setRoute("services")} className="rounded-xl px-4 py-3 text-left text-sm font-semibold hover:bg-slate-50">Services</button>
+            <button onClick={() => setRoute("compliance")} className="rounded-xl px-4 py-3 text-left text-sm font-semibold hover:bg-slate-50">Compliance</button>
+            <a href={"tel:" + PHONE_LINK} className="rounded-xl px-4 py-3 text-sm font-semibold hover:bg-slate-50">{PHONE_DISPLAY}</a>
+            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="rounded-xl px-4 py-3 text-sm font-semibold hover:bg-slate-50">Text / WhatsApp</a>
+            <Link href="/prices" className={`${buttonClasses("primary")} w-full`}>Prices</Link>
+            <Link href="/contact" className={`${buttonClasses("primary")} w-full`}>Request Inspection</Link>
+          </nav>
+        </details>
       </div>
     </div>
   </Container>
 </div>
 );
 }
-export default function QuadrelliotWebsite({ initialRoute = "home" }: { initialRoute?: Route }) {
+export default function QuadrelliotWebsite({
+initialRoute = "home",
+initialService = "",
+}: {
+initialRoute?: Route;
+initialService?: string;
+}) {
 const [route, setRoute] = useState<Route>(initialRoute);
 const [service, setService] = useState<ServiceKey>("inspection");
-const [company, setCompany] = useState("");
 const [name, setName] = useState("");
 const [email, setEmail] = useState("");
 const [phone, setPhone] = useState("");
 const [postcode, setPostcode] = useState("");
-const [serviceWanted, setServiceWanted] = useState<ServiceKey>("inspection");
-const [deadline, setDeadline] = useState("asap");
+const [serviceWanted, setServiceWanted] = useState<EnquiryServiceKey | "">(
+isEnquiryServiceKey(initialService) ? initialService : ""
+);
+const [preferredContact, setPreferredContact] = useState<PreferredContactMethod | "">("");
 const [scope, setScope] = useState("");
 const [submissionState, setSubmissionState] = useState<"idle" | "submitting" | "success" | "error">("idle");
 const [submissionError, setSubmissionError] = useState("");
 const submissionInProgress = useRef(false);
 const serviceKeys = useMemo(() => Object.keys(SERVICES) as ServiceKey[], []);
 const current = useMemo(() => SERVICES[service], [service]);
-const serviceOptions = useMemo(
-() =>
-serviceKeys.map((key) => ({
-value: key,
-label: SERVICES[key].title,
-})),
-[serviceKeys]
-);
-const deadlineOptions = useMemo(
-() => [
-{ value: "asap", label: "As soon as possible" },
-{ value: "week", label: "This week" },
-{ value: "month", label: "This month" },
-{ value: "planned", label: "Planned / recurring work" },
-],
-[]
-);
 async function submitEnquiry(event: React.FormEvent<HTMLFormElement>) {
 event.preventDefault();
 if (submissionInProgress.current) return;
@@ -277,13 +284,12 @@ const response = await fetch("/api/contact", {
 method: "POST",
 headers: { "Content-Type": "application/json" },
 body: JSON.stringify({
-company,
 name,
 email,
 phone,
 postcode,
 service: serviceWanted,
-deadline,
+preferredContact,
 scope,
 }),
 });
@@ -315,11 +321,6 @@ error instanceof Error ? error.message : "Your enquiry could not be sent. Please
 submissionInProgress.current = false;
 }
 }
-function scrollToId(id: string) {
-const el = document.getElementById(id);
-if (!el) return;
-el.scrollIntoView({ behavior: "smooth", block: "start" });
-}
 return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setRoute={setRoute} />
   {route === "home" && (
     <main>
@@ -333,11 +334,11 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                 Instant on-site drone inspection reports
               </div>
               <h1 className="mt-6 max-w-3xl text-5xl font-bold leading-[0.98] tracking-tight text-slate-950 sm:text-6xl">
-                Commercial drone inspections with reports ready fast.
+                Commercial &amp; residential drone inspections with near-instant reports.
               </h1>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-700">
-                Quadrelliot provides commercial roof and asset inspections with clear aerial images,
-                marked-up findings and a report ready within an hour of the flight taking place.
+                Quadrelliot provides roof and asset inspections with clear aerial imagery, marked-up findings and a
+                report delivered within an hour of the flight.
               </p>
               <div className="mt-4 text-base font-semibold text-slate-700">
                 Call or text{" "}
@@ -347,20 +348,20 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button onClick={() => setRoute("contact")}>Request Inspection</Button>
+                <LinkButton href="/prices" variant="primary">
+                  View Prices
+                </LinkButton>
                 <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
                   Text / WhatsApp
                 </LinkButton>
-                <Button variant="secondary" onClick={() => scrollToId("what-you-get")}>
-                  See What You Get
-                </Button>
               </div>
               <div className="mt-7 flex flex-wrap gap-x-4 gap-y-1 text-sm font-medium text-slate-600">
-                {["Commercial roofs", "Marked-up findings", "Report ready within an hour"].map((item) => (
+                {["Residential & commercial roofs", "Marked-up findings", "Report within an hour"].map((item) => (
                   <span key={item}>{item}</span>
                 ))}
               </div>
               <div className="mt-3 text-sm leading-6 text-slate-500">
-                UK commercial work considered · CAA-compliant operations ·{" "}
+                UK residential and commercial work considered · CAA-compliant operations ·{" "}
                 <span className="whitespace-nowrap">Insured · RAMS available</span>
               </div>
             </div>
@@ -431,6 +432,21 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
           </div>
         </Container>
       </section>
+      <section className="border-y border-slate-200 bg-[#f6f3ee]">
+        <Container>
+          <div className="grid gap-6 py-10 md:grid-cols-[1fr_auto] md:items-center">
+            <div>
+              <div className="text-sm font-semibold text-orange-600">Clear costs before you enquire</div>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight">Straightforward inspection prices</h2>
+              <p className="mt-3 max-w-2xl leading-7 text-slate-600">
+                Targeted roof checks start from £69. Full residential roof inspections with a report delivered within
+                an hour are £149.
+              </p>
+            </div>
+            <LinkButton href="/prices" variant="dark">See all prices</LinkButton>
+          </div>
+        </Container>
+      </section>
       <section className="border-b border-slate-200 bg-white">
         <Container>
           <div className="py-10">
@@ -489,10 +505,10 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
         <Container>
           <div className="grid gap-8 py-14 md:grid-cols-[0.9fr_1.1fr] md:items-start">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight">Built for commercial roof and asset work</h2>
+              <h2 className="text-3xl font-bold tracking-tight">Professional inspections for homes, commercial property and assets</h2>
               <p className="mt-3 text-slate-600">
-                Quadrelliot is aimed at property, facilities, construction and infrastructure work - where speed,
-                clarity and evidence matter more than glossy aerial footage.
+                From a specific concern on a residential roof to property, facilities, construction and infrastructure
+                work, the focus stays on speed, clarity and useful visual evidence.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button onClick={() => setRoute("contact")}>Request Inspection</Button>
@@ -503,12 +519,12 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {[
+                "Homeowners",
                 "Facilities management",
                 "Commercial property",
                 "Roofing contractors",
                 "Construction teams",
-                "Industrial sites",
-                "Estates and maintenance",
+                "Housing and public sector",
               ].map((item) => (
                 <div
                   key={item}
@@ -609,7 +625,7 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Button
                     onClick={() => {
-                      setServiceWanted(service);
+                      setServiceWanted("commercial-housing-public-sector");
                       setRoute("contact");
                     }}
                   >
@@ -627,6 +643,154 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
           </div>
         </div>
       </Container>
+    </main>
+  )}
+  {route === "prices" && (
+    <main>
+      <section className="border-b border-slate-200 bg-[#f6f3ee]">
+        <Container>
+          <div className="py-14 sm:py-16">
+            <div className="max-w-3xl">
+              <div className="text-sm font-semibold text-orange-600">Clear, practical pricing</div>
+              <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">Drone inspection prices</h1>
+              <p className="mt-4 text-lg leading-8 text-slate-700">
+                Straightforward pricing for residential roof inspections, targeted checks and aerial imagery.
+                Commercial and larger projects are quoted individually.
+              </p>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+                Whether you are comparing a roof inspection cost or a drone roof survey cost, choose the service that
+                best matches the area you need checked. If you are unsure, send an enquiry and Quadrelliot can help.
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-5 md:grid-cols-2">
+              <Card className="flex h-full flex-col border-orange-500/50">
+                <CardBody>
+                  <div className="text-sm font-semibold text-orange-600">Targeted inspection</div>
+                  <h2 className="mt-2 text-2xl font-bold">Roof Spot Check</h2>
+                  <div className="mt-3 text-4xl font-bold tracking-tight">£69</div>
+                  <p className="mt-4 text-sm leading-6 text-slate-600">One specific concern or area only.</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {["Slipped tile", "Flashing", "Chimney", "Gutter", "Storm damage", "Solar-panel concern"].map((item) => (
+                      <span key={item} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">{item}</span>
+                    ))}
+                  </div>
+                  <Link href="/contact?service=roof-spot-check" className={`${buttonClasses("primary")} mt-6 w-full sm:w-auto`}>Request Spot Check</Link>
+                </CardBody>
+              </Card>
+
+              <DarkPanel className="flex h-full flex-col">
+                <div className="p-6">
+                  <div className="text-sm font-semibold text-orange-300">Full residential inspection</div>
+                  <h2 className="mt-2 text-2xl font-bold">Residential Roof Inspection</h2>
+                  <div className="mt-3 text-4xl font-bold tracking-tight">£149</div>
+                  <ul className="mt-4 space-y-2 text-sm leading-6 text-slate-300">
+                    {["Full drone roof inspection", "High-resolution imagery", "Visible defects identified", "Inspection report delivered within one hour of the flight"].map((item) => (
+                      <li key={item} className="flex gap-3"><span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-orange-400" />{item}</li>
+                    ))}
+                  </ul>
+                  <Link href="/contact?service=residential-roof-inspection" className={`${buttonClasses("primary")} mt-6 w-full sm:w-auto`}>Request Roof Inspection</Link>
+                </div>
+              </DarkPanel>
+
+              <Card className="flex h-full flex-col">
+                <CardBody>
+                  <div className="text-sm font-semibold text-orange-600">Larger properties</div>
+                  <h2 className="mt-2 text-2xl font-bold">Large / Complex Residential</h2>
+                  <div className="mt-3 text-3xl font-bold tracking-tight">from £195</div>
+                  <p className="mt-4 text-sm leading-6 text-slate-600">
+                    For larger properties or inspections requiring substantially more flight or inspection time.
+                  </p>
+                  <Link href="/contact?service=large-complex-residential" className={`${buttonClasses("primary")} mt-6 w-full sm:w-auto`}>Request Quote</Link>
+                </CardBody>
+              </Card>
+
+              <Card className="flex h-full flex-col">
+                <CardBody>
+                  <div className="text-sm font-semibold text-orange-600">Scoped to the project</div>
+                  <h2 className="mt-2 text-2xl font-bold">Commercial / Housing / Public Sector</h2>
+                  <div className="mt-3 text-3xl font-bold tracking-tight">Quote</div>
+                  <p className="mt-4 text-sm leading-6 text-slate-600">
+                    Commercial drone inspection work is individually priced based on the property, access and scope.
+                  </p>
+                  <Link href="/contact?service=commercial-housing-public-sector" className={`${buttonClasses("primary")} mt-6 w-full sm:w-auto`}>Request Commercial Quote</Link>
+                </CardBody>
+              </Card>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="bg-white">
+        <Container>
+          <div className="py-14">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl font-bold tracking-tight">Additional services</h2>
+              <p className="mt-3 text-slate-600">Focused options for follow-up checks, imagery and specific visible concerns.</p>
+            </div>
+            <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {[
+                { title: "Post-Repair Check", price: "£69", service: "post-repair-check", desc: "A targeted drone inspection after roofing or repair work has been completed." },
+                { title: "Aerial Property Photos", price: "£79", service: "aerial-property-photos", desc: "High-resolution aerial property imagery. No inspection report or defect assessment." },
+                { title: "Gutter & Chimney Check", price: "£79", service: "gutter-chimney-check", desc: "Focused visual check of gutters, chimney stack, pots, flashing and obvious visible defects." },
+                { title: "Solar Panel Visual Check", price: "£79", service: "solar-panel-visual-check", desc: "Aerial visual inspection for obvious panel damage, debris, displacement and visible external issues. This is not an electrical or performance test." },
+                { title: "Storm Damage Check", price: "£89", service: "storm-damage-check", desc: "Targeted inspection for displaced tiles, ridge or flashing damage, gutter damage, debris and other obvious visible issues after severe weather." },
+                { title: "Repair Before & After Pack", price: "£99", service: "repair-before-after-pack", desc: "Aerial imagery before repair work and again after completion for comparison and documentation." },
+              ].map((item) => (
+                <Card key={item.title} className="flex h-full flex-col">
+                  <CardBody>
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="text-lg font-bold">{item.title}</h3>
+                      <div className="shrink-0 text-xl font-bold">{item.price}</div>
+                    </div>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">{item.desc}</p>
+                    <Link href={`/contact?service=${item.service}`} className={`${buttonClasses("secondary")} mt-5 w-full`}>Enquire about this service</Link>
+                  </CardBody>
+                </Card>
+              ))}
+            </div>
+
+            <div className="mt-10 rounded-2xl border border-slate-300 bg-[#f6f3ee] p-6 sm:p-8">
+              <div className="grid gap-5 md:grid-cols-[1fr_auto] md:items-center">
+                <div>
+                  <div className="inline-flex rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-700">Existing customers only</div>
+                  <h2 className="mt-3 text-2xl font-bold">Existing Customer Return Check — £49</h2>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+                    Only available where Quadrelliot has already inspected the property and is returning to recheck a specific issue.
+                  </p>
+                </div>
+                <Link href="/contact?service=existing-customer-return-check" className={buttonClasses("dark")}>Request Return Check</Link>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="border-t border-slate-200 bg-[#f6f3ee]">
+        <Container>
+          <div className="py-14">
+            <h2 className="text-3xl font-bold tracking-tight">Prices FAQ</h2>
+            <div className="mt-7 grid gap-4 md:grid-cols-2">
+              {[
+                { q: "What does the £69 Roof Spot Check cover?", a: "It covers one clearly defined concern or area, such as a slipped tile, chimney, flashing or gutter. It is not a full roof inspection." },
+                { q: "What is included in the £149 Residential Roof Inspection?", a: "A full drone roof inspection, high-resolution imagery, identification of visible defects and an inspection report delivered within one hour of the flight." },
+                { q: "How quickly do I receive the report?", a: "Where a report is included, it is delivered within one hour of the flight taking place." },
+                { q: "Do you inspect commercial properties?", a: "Yes. Commercial, housing and public-sector inspections are quoted individually based on scope." },
+                { q: "Do I need to be at the property?", a: "Access and site requirements are confirmed before the flight. Share any access constraints or known hazards in your enquiry so the inspection can be planned properly." },
+              ].map((item) => (
+                <div key={item.q} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <h3 className="font-bold text-slate-950">{item.q}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{item.a}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/contact?service=not-sure" className={buttonClasses("primary")}>Not sure? Ask for help</Link>
+              <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">Text / WhatsApp</LinkButton>
+            </div>
+          </div>
+        </Container>
+      </section>
     </main>
   )}
   {route === "compliance" && (
@@ -705,74 +869,94 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
             </p>
             <form onSubmit={submitEnquiry} className="mt-8 space-y-4">
               <div className="space-y-2">
-                <FieldLabel>Company</FieldLabel>
-                <TextInput value={company} onChange={(event) => setCompany(event.target.value)} placeholder="Company name" />
+                <FieldLabel htmlFor="service">What are you interested in?</FieldLabel>
+                <SelectNative
+                  id="service"
+                  value={serviceWanted}
+                  onChange={(event) => setServiceWanted(event.target.value as EnquiryServiceKey | "")}
+                  options={[{ value: "", label: "Choose a service" }, ...ENQUIRY_SERVICE_OPTIONS]}
+                  required
+                />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <FieldLabel>Contact name</FieldLabel>
-                  <TextInput value={name} onChange={(event) => setName(event.target.value)} placeholder="Full name" />
+                  <FieldLabel htmlFor="name">Name</FieldLabel>
+                  <TextInput
+                    id="name"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    placeholder="Full name"
+                    autoComplete="name"
+                    maxLength={200}
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
-                  <FieldLabel>Email</FieldLabel>
+                  <FieldLabel htmlFor="email">Email address</FieldLabel>
                   <TextInput
+                    id="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
-                    placeholder="name@company.com"
+                    placeholder="name@example.com"
                     type="email"
+                    autoComplete="email"
+                    maxLength={254}
                     required
                   />
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <FieldLabel>Phone</FieldLabel>
+                  <FieldLabel htmlFor="phone">Phone number</FieldLabel>
                   <TextInput
+                    id="phone"
                     value={phone}
                     onChange={(event) => setPhone(event.target.value)}
-                    placeholder="Optional"
+                    placeholder="Your phone number"
+                    type="tel"
                     inputMode="tel"
+                    autoComplete="tel"
+                    maxLength={100}
+                    required
                   />
                 </div>
                 <div className="space-y-2">
-                  <FieldLabel>Project postcode / location</FieldLabel>
+                  <FieldLabel htmlFor="postcode">Property postcode / address</FieldLabel>
                   <TextInput
+                    id="postcode"
                     value={postcode}
                     onChange={(event) => setPostcode(event.target.value)}
-                    placeholder="e.g. SP10, RG14, SO20"
-                  />
-                </div>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <FieldLabel>Service</FieldLabel>
-                  <SelectNative
-                    value={serviceWanted}
-                    onChange={(event) => setServiceWanted(event.target.value as ServiceKey)}
-                    options={serviceOptions}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <FieldLabel>Timing</FieldLabel>
-                  <SelectNative
-                    value={deadline}
-                    onChange={(event) => setDeadline(event.target.value)}
-                    options={deadlineOptions}
+                    placeholder="Address or postcode"
+                    autoComplete="street-address"
+                    maxLength={500}
+                    required
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <FieldLabel>What needs inspecting?</FieldLabel>
+                <FieldLabel htmlFor="preferred-contact">Preferred contact method</FieldLabel>
+                <SelectNative
+                  id="preferred-contact"
+                  value={preferredContact}
+                  onChange={(event) => setPreferredContact(event.target.value as PreferredContactMethod | "")}
+                  options={[{ value: "", label: "Choose how you would like a reply" }, ...PREFERRED_CONTACT_OPTIONS]}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <FieldLabel htmlFor="scope">Details / what needs checking</FieldLabel>
                 <TextArea
+                  id="scope"
                   value={scope}
                   onChange={(event) => setScope(event.target.value)}
-                  placeholder="Example: commercial flat roof, suspected leak near skylights, need marked-up images and a quick report for contractor."
+                  placeholder="Tell me what you would like checked, including any known issues, access constraints or hazards."
+                  maxLength={5000}
                   required
                 />
               </div>
               <div className="flex flex-wrap gap-3">
                 <Button type="submit" disabled={submissionState === "submitting"}>
-                  {submissionState === "submitting" ? "Sending…" : "Submit Enquiry"}
+                  {submissionState === "submitting" ? "Sending…" : "Request an inspection"}
                 </Button>
                 <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
                   Text / WhatsApp instead
@@ -780,7 +964,7 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
               </div>
               {submissionState === "success" ? (
                 <div role="status" className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-700">
-                  Thank you. Your enquiry has been sent successfully and I will be in touch shortly.
+                  Thanks — your enquiry has been sent. I’ll get back to you as soon as possible.
                 </div>
               ) : null}
               {submissionState === "error" ? (
@@ -824,8 +1008,8 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                 </div>
               </div>
               <div className="mt-6 border-t border-white/10 pt-5 text-sm leading-6 text-slate-300">
-                Commercial drone inspections, fast reporting and clear visual deliverables. Reports are built into
-                the inspection workflow, with delivery ready within an hour of the flight taking place.
+                Residential and commercial drone inspections, fast reporting and clear visual deliverables. Reports
+                are built into the inspection workflow, with delivery ready within an hour of the flight taking place.
               </div>
             </DarkPanel>
             <Card>

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s · Quadrelliot",
   },
   description:
-    "Commercial drone roof and asset inspections with instant visual reports, annotated findings and clear evidence for property, facilities and construction teams.",
+    "Residential and commercial drone roof and asset inspections with instant visual reports, annotated findings and clear evidence.",
 };
 
 export default function RootLayout({

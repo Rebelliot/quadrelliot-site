@@ -1,26 +1,25 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import {
+  ENQUIRY_SERVICES,
+  isEnquiryServiceKey,
+  PREFERRED_CONTACT_METHODS,
+  type PreferredContactMethod,
+} from "@/lib/enquiry";
 
 const CONTACT_EMAIL = "quadrelliot@gmail.com";
 
-const SERVICES = {
-  inspection: "Commercial Roof Inspection",
-  asset: "Asset Inspection",
-  progress: "Construction Progress",
-} as const;
-
-const DEADLINES = {
-  asap: "As soon as possible",
-  week: "This week",
-  month: "This month",
-  planned: "Planned / recurring work",
-} as const;
-
-type ServiceKey = keyof typeof SERVICES;
-type DeadlineKey = keyof typeof DEADLINES;
-
 function readString(value: unknown, maximumLength: number) {
   return typeof value === "string" ? value.trim().slice(0, maximumLength) : "";
+}
+
+function getPostcodeForSubject(location: string) {
+  const upperLocation = location.toUpperCase();
+  const fullPostcode = upperLocation.match(/\b([A-Z]{1,2}\d[A-Z\d]?)[ ]?\d[A-Z]{2}\b/);
+
+  if (fullPostcode) return `${fullPostcode[1]} ${fullPostcode[0].slice(-3)}`;
+
+  return upperLocation.match(/\b[A-Z]{1,2}\d[A-Z\d]?\b/)?.[0] ?? "";
 }
 
 export async function POST(request: Request) {
@@ -52,28 +51,44 @@ export async function POST(request: Request) {
     );
   }
 
-  const company = readString(payload.company, 200);
   const name = readString(payload.name, 200);
   const email = readString(payload.email, 254);
   const phone = readString(payload.phone, 100);
-  const postcode = readString(payload.postcode, 200);
-  const service = readString(payload.service, 50);
-  const deadline = readString(payload.deadline, 50);
+  const postcode = readString(payload.postcode, 500);
+  const service = readString(payload.service, 100);
+  const preferredContact = readString(payload.preferredContact, 20);
   const scope = readString(payload.scope, 5000);
 
   const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const serviceIsValid = service in SERVICES;
-  const deadlineIsValid = deadline in DEADLINES;
+  const phoneIsValid = /^[+\d][\d\s().-]{6,}$/.test(phone);
+  const serviceIsValid = isEnquiryServiceKey(service);
+  const preferredContactIsValid = preferredContact in PREFERRED_CONTACT_METHODS;
 
-  if (!emailIsValid || !scope || !serviceIsValid || !deadlineIsValid) {
+  if (
+    !name ||
+    !emailIsValid ||
+    !phoneIsValid ||
+    !postcode ||
+    !scope ||
+    !serviceIsValid ||
+    !preferredContactIsValid
+  ) {
     return NextResponse.json(
       { success: false, error: "Please complete the required enquiry details and try again." },
       { status: 400 }
     );
   }
 
-  const serviceLabel = SERVICES[service as ServiceKey];
-  const deadlineLabel = DEADLINES[deadline as DeadlineKey];
+  const serviceLabel = ENQUIRY_SERVICES[service];
+  const preferredContactLabel =
+    PREFERRED_CONTACT_METHODS[preferredContact as PreferredContactMethod];
+  const submittedAt = new Date();
+  const submittedAtLabel = new Intl.DateTimeFormat("en-GB", {
+    dateStyle: "full",
+    timeStyle: "long",
+    timeZone: "Europe/London",
+  }).format(submittedAt);
+  const subjectPostcode = getPostcodeForSubject(postcode);
   const resend = new Resend(apiKey);
 
   try {
@@ -81,17 +96,18 @@ export async function POST(request: Request) {
       from: fromEmail,
       to: CONTACT_EMAIL,
       replyTo: email,
-      subject: "Quadrelliot - Inspection Enquiry",
+      subject: `New Quadrelliot enquiry — ${serviceLabel.replace(/ — .+$/, "")}${subjectPostcode ? ` — ${subjectPostcode}` : ""}`,
       text: [
-        "Company: " + (company || "-"),
-        "Name: " + (name || "-"),
+        "Service requested: " + serviceLabel,
+        "Name: " + name,
         "Email: " + email,
-        "Phone: " + (phone || "-"),
-        "Location/Postcode: " + (postcode || "-"),
-        "Service: " + serviceLabel,
-        "Timing: " + deadlineLabel,
+        "Phone: " + phone,
+        "Property address/postcode: " + postcode,
+        "Preferred contact method: " + preferredContactLabel,
+        "Submitted: " + submittedAtLabel,
+        "Submitted (UTC): " + submittedAt.toISOString(),
         "",
-        "What needs inspecting / reporting:",
+        "Enquiry details:",
         scope,
       ].join("\n"),
     });
