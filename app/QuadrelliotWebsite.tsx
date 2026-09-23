@@ -625,7 +625,7 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Button
                     onClick={() => {
-                      setServiceWanted("commercial-housing-public-sector");
+                      setServiceWanted("industrial-commercial");
                       setRoute("contact");
                     }}
                   >
@@ -655,7 +655,7 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
               <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">Drone inspection prices</h1>
               <p className="mt-4 text-lg leading-8 text-slate-700">
                 Straightforward pricing for residential roof inspections, targeted checks and aerial imagery.
-                Commercial and larger projects are quoted individually.
+                Industrial and commercial inspections start from £195; larger sites and public-sector projects are quoted individually.
               </p>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
                 Whether you are comparing a roof inspection cost or a drone roof survey cost, choose the service that
@@ -708,15 +708,27 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
               <Card className="flex h-full flex-col">
                 <CardBody>
                   <div className="text-sm font-semibold text-orange-600">Scoped to the project</div>
-                  <h2 className="mt-2 text-2xl font-bold">Commercial / Housing / Public Sector</h2>
+                  <h2 className="mt-2 text-2xl font-bold">Housing / Public Sector</h2>
                   <div className="mt-3 text-3xl font-bold tracking-tight">Quote</div>
                   <p className="mt-4 text-sm leading-6 text-slate-600">
-                    Commercial drone inspection work is individually priced based on the property, access and scope.
+                    Inspections for housing providers, councils, public bodies and larger portfolios are quoted individually.
                   </p>
-                  <Link href="/contact?service=commercial-housing-public-sector" className={`${buttonClasses("primary")} mt-6 w-full sm:w-auto`}>Request Commercial Quote</Link>
+                  <Link href="/contact?service=commercial-housing-public-sector" className={`${buttonClasses("primary")} mt-6 w-full sm:w-auto`}>Request Public Sector Quote</Link>
                 </CardBody>
               </Card>
             </div>
+            <DarkPanel className="mt-5 p-6 sm:p-8">
+              <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+                <div>
+                  <h2 className="text-2xl font-bold">Industrial &amp; Commercial Inspections</h2>
+                  <div className="mt-3 text-3xl font-bold tracking-tight">from £195</div>
+                  <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-300">
+                    Drone inspections for commercial buildings, warehouses, industrial sites, factories, roofs and other assets. Larger or more complex sites are quoted individually based on access, size and scope.
+                  </p>
+                </div>
+                <Link href="/contact?service=industrial-commercial" className={`${buttonClasses("primary")} w-full md:w-auto`}>Request Commercial Inspection</Link>
+              </div>
+            </DarkPanel>
           </div>
         </Container>
       </section>
@@ -775,7 +787,7 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                 { q: "What does the £69 Roof Spot Check cover?", a: "It covers one clearly defined concern or area, such as a slipped tile, chimney, flashing or gutter. It is not a full roof inspection." },
                 { q: "What is included in the £149 Residential Roof Inspection?", a: "A full drone roof inspection, high-resolution imagery, identification of visible defects and an inspection report delivered within one hour of the flight." },
                 { q: "How quickly do I receive the report?", a: "Where a report is included, it is delivered within one hour of the flight taking place." },
-                { q: "Do you inspect commercial properties?", a: "Yes. Commercial, housing and public-sector inspections are quoted individually based on scope." },
+                { q: "Do you inspect commercial properties?", a: "Yes. Industrial and commercial inspections start from £195, with larger or more complex sites quoted individually. Housing and public-sector work is quoted individually." },
                 { q: "Do I need to be at the property?", a: "Access and site requirements are confirmed before the flight. Share any access constraints or known hazards in your enquiry so the inspection can be planned properly." },
               ].map((item) => (
                 <div key={item.q} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

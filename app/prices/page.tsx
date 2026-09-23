@@ -5,7 +5,7 @@ import QuadrelliotWebsite from "../QuadrelliotWebsite";
 export const metadata: Metadata = {
   title: { absolute: "Drone Roof Inspection Prices | Quadrelliot" },
   description:
-    "Drone roof inspection prices from £69, including targeted checks, residential roof inspections and individually quoted commercial drone inspections.",
+    "Drone roof inspection prices from £69, including targeted checks, residential roof inspections and industrial and commercial inspections from £195.",
   alternates: {
     canonical: "https://quadrelliot.co.uk/prices",
   },
