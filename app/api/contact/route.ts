@@ -52,6 +52,7 @@ export async function POST(request: Request) {
   }
 
   const name = readString(payload.name, 200);
+  const company = readString(payload.company, 200);
   const email = readString(payload.email, 254);
   const phone = readString(payload.phone, 100);
   const postcode = readString(payload.postcode, 500);
@@ -100,6 +101,7 @@ export async function POST(request: Request) {
       text: [
         "Service requested: " + serviceLabel,
         "Name: " + name,
+        ...(company ? ["Company / organisation: " + company] : []),
         "Email: " + email,
         "Phone: " + phone,
         "Property address/postcode: " + postcode,

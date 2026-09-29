@@ -22,5 +22,11 @@ lastModified: new Date(),
 changeFrequency: "monthly",
 priority: 0.9,
 },
+{
+url: baseUrl + "/commercial",
+lastModified: new Date(),
+changeFrequency: "monthly",
+priority: 0.9,
+},
 ];
 }

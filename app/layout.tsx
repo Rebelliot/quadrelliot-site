@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://quadrelliot.co.uk"),
   title: {
     default: "Quadrelliot | Instant Drone Inspection Reports",
     template: "%s · Quadrelliot",

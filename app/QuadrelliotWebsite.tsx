@@ -1,33 +1,21 @@
 "use client";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { EnquiryForm } from "@/components/enquiry-form";
 import {
-ENQUIRY_SERVICE_OPTIONS,
-isEnquiryServiceKey,
-PREFERRED_CONTACT_OPTIONS,
-type EnquiryServiceKey,
-type PreferredContactMethod,
-} from "@/lib/enquiry";
-
-declare global {
-interface Window {
-gtag?: (
-command: "event",
-eventName: "conversion",
-parameters: { send_to: string }
-) => void;
-}
-}
-
-type Route = "home" | "services" | "prices" | "compliance" | "contact";
-const EMAIL = "quadrelliot@gmail.com";
-const PHONE_DISPLAY = "07732 272022";
-const PHONE_LINK = "+447732272022";
-const WHATSAPP_LINK = "https://wa.me/447732272022";
-const Container = ({ children }: { children: React.ReactNode }) => (
-  <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">{children}</div>
-);
+  buttonClasses,
+  Container,
+  EMAIL,
+  LinkButton,
+  PHONE_DISPLAY,
+  PHONE_LINK,
+  SiteButton as Button,
+  SiteFooter,
+  SiteHeader,
+  type SiteRoute as Route,
+  WHATSAPP_LINK,
+} from "@/components/site-chrome";
 const SERVICES = {
 inspection: {
 title: "Commercial Roof Inspection",
@@ -64,104 +52,6 @@ bullets: [
 },
 } as const;
 type ServiceKey = keyof typeof SERVICES;
-function FieldLabel({ children, htmlFor }: { children: React.ReactNode; htmlFor: string }) {
-return <label htmlFor={htmlFor} className="text-sm font-medium text-slate-700">{children}</label>;
-}
-function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
-return (
-<input
-{...props}
-className={[
-"h-11 w-full rounded-xl border border-slate-300 bg-white px-4 text-slate-950",
-"placeholder:text-slate-400 outline-none",
-"focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20",
-].join(" ")}
-/>
-);
-}
-function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
-return (
-<textarea
-{...props}
-className={[
-"min-h-[130px] w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950",
-"placeholder:text-slate-400 outline-none",
-"focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20",
-].join(" ")}
-/>
-);
-}
-function SelectNative(
-props: React.SelectHTMLAttributes<HTMLSelectElement> & {
-options: { value: string; label: string }[];
-}
-) {
-const { options, ...rest } = props;
-return (
-<select
-{...rest}
-className={[
-"h-11 w-full rounded-xl border border-slate-300 bg-white px-4 text-slate-950",
-"outline-none",
-"focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20",
-].join(" ")}
->
-{options.map((option) => ( <option key={option.value} value={option.value}>
-{option.label} </option>
-))} </select>
-);
-}
-type ButtonVariant = "primary" | "secondary" | "dark";
-
-function buttonClasses(variant: ButtonVariant = "primary") {
-const base =
-"inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-orange-500/30 disabled:cursor-not-allowed disabled:opacity-60";
-if (variant === "primary") {
-return base + " bg-orange-500 text-slate-950 hover:bg-orange-400";
-}
-if (variant === "dark") {
-return base + " bg-slate-950 text-white hover:bg-slate-800";
-}
-return base + " border border-slate-300 bg-white text-slate-950 hover:bg-slate-50";
-}
-function Button({
-children,
-variant = "primary",
-onClick,
-type = "button",
-disabled = false,
-}: {
-children: React.ReactNode;
-variant?: ButtonVariant;
-onClick?: () => void;
-type?: "button" | "submit";
-disabled?: boolean;
-}) {
-return ( <button type={type} onClick={onClick} disabled={disabled} className={buttonClasses(variant)}>
-{children} </button>
-);
-}
-function LinkButton({
-children,
-href,
-variant = "secondary",
-target,
-}: {
-children: React.ReactNode;
-href: string;
-variant?: ButtonVariant;
-target?: "_blank";
-}) {
-return (
-<a
-href={href}
-target={target}
-rel={target === "_blank" ? "noopener noreferrer" : undefined}
-className={buttonClasses(variant)}
->
-{children} </a>
-);
-}
 function Card({
 children,
 className = "",
@@ -194,60 +84,6 @@ return (
 {children} </div>
 );
 }
-function Header({ setRoute }: { setRoute: React.Dispatch<React.SetStateAction<Route>> }) {
-const navBtn = (route: Route, label: string, variant: ButtonVariant = "secondary") => (
-<Button variant={variant} onClick={() => setRoute(route)}>
-{label} </Button>
-);
-return ( <div className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur"> <Container> <div className="flex items-center justify-between py-4">
-<Link
-href="/"
-className="group flex items-center gap-3 text-left"
-aria-label="Go to home"
-> <Image
-           src="/brand/quadrelliot-q.png"
-           alt="Quadrelliot"
-           width={38}
-           height={38}
-           className="h-9 w-9 transition group-hover:scale-[1.03]"
-           priority
-         /> <div className="leading-tight"> <div className="text-lg font-bold tracking-wide text-slate-950">Quadrelliot</div> <div className="hidden text-xs text-slate-500 sm:block">Instant drone inspection reports</div> </div> </Link>
-      <nav className="hidden items-center gap-2 lg:flex">
-        {navBtn("services", "Services")}
-        {navBtn("compliance", "Compliance")}
-        <a
-          href={"tel:" + PHONE_LINK}
-          className="inline-flex h-11 items-center whitespace-nowrap px-2 text-sm font-semibold text-slate-700 transition hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
-        >
-          {PHONE_DISPLAY}
-        </a>
-        <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
-          Text / WhatsApp
-        </LinkButton>
-        <LinkButton href="/prices" variant="primary">Prices</LinkButton>
-        <LinkButton href="/contact" variant="primary">Request Inspection</LinkButton>
-      </nav>
-      <div className="flex items-center gap-2 lg:hidden">
-        <Link href="/contact" className={buttonClasses("primary")}>Enquire</Link>
-        <details className="group relative">
-          <summary className={`${buttonClasses("secondary")} cursor-pointer list-none [&::-webkit-details-marker]:hidden`}>
-            Menu
-          </summary>
-          <nav className="absolute right-0 top-13 z-50 grid w-[min(20rem,calc(100vw-2rem))] gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl">
-            <button onClick={() => setRoute("services")} className="rounded-xl px-4 py-3 text-left text-sm font-semibold hover:bg-slate-50">Services</button>
-            <button onClick={() => setRoute("compliance")} className="rounded-xl px-4 py-3 text-left text-sm font-semibold hover:bg-slate-50">Compliance</button>
-            <a href={"tel:" + PHONE_LINK} className="rounded-xl px-4 py-3 text-sm font-semibold hover:bg-slate-50">{PHONE_DISPLAY}</a>
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="rounded-xl px-4 py-3 text-sm font-semibold hover:bg-slate-50">Text / WhatsApp</a>
-            <Link href="/prices" className={`${buttonClasses("primary")} w-full`}>Prices</Link>
-            <Link href="/contact" className={`${buttonClasses("primary")} w-full`}>Request Inspection</Link>
-          </nav>
-        </details>
-      </div>
-    </div>
-  </Container>
-</div>
-);
-}
 export default function QuadrelliotWebsite({
 initialRoute = "home",
 initialService = "",
@@ -257,71 +93,9 @@ initialService?: string;
 }) {
 const [route, setRoute] = useState<Route>(initialRoute);
 const [service, setService] = useState<ServiceKey>("inspection");
-const [name, setName] = useState("");
-const [email, setEmail] = useState("");
-const [phone, setPhone] = useState("");
-const [postcode, setPostcode] = useState("");
-const [serviceWanted, setServiceWanted] = useState<EnquiryServiceKey | "">(
-isEnquiryServiceKey(initialService) ? initialService : ""
-);
-const [preferredContact, setPreferredContact] = useState<PreferredContactMethod | "">("");
-const [scope, setScope] = useState("");
-const [submissionState, setSubmissionState] = useState<"idle" | "submitting" | "success" | "error">("idle");
-const [submissionError, setSubmissionError] = useState("");
-const submissionInProgress = useRef(false);
 const serviceKeys = useMemo(() => Object.keys(SERVICES) as ServiceKey[], []);
 const current = useMemo(() => SERVICES[service], [service]);
-async function submitEnquiry(event: React.FormEvent<HTMLFormElement>) {
-event.preventDefault();
-if (submissionInProgress.current) return;
-
-submissionInProgress.current = true;
-setSubmissionState("submitting");
-setSubmissionError("");
-
-try {
-const response = await fetch("/api/contact", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({
-name,
-email,
-phone,
-postcode,
-service: serviceWanted,
-preferredContact,
-scope,
-}),
-});
-const result = (await response.json().catch(() => null)) as
-| { success?: boolean; error?: string }
-| null;
-
-if (!response.ok || !result?.success) {
-throw new Error(result?.error || "Your enquiry could not be sent. Please try again.");
-}
-
-setSubmissionState("success");
-
-try {
-if (typeof window.gtag === "function") {
-window.gtag("event", "conversion", {
-send_to: "AW-18243911087/RRriCO-KnugcEK_7r_tD",
-});
-}
-} catch {
-// Tracking must never change the successful form outcome.
-}
-} catch (error) {
-setSubmissionState("error");
-setSubmissionError(
-error instanceof Error ? error.message : "Your enquiry could not be sent. Please try again."
-);
-} finally {
-submissionInProgress.current = false;
-}
-}
-return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setRoute={setRoute} />
+return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <SiteHeader onRoute={setRoute} />
   {route === "home" && (
     <main>
       <section className="relative overflow-hidden border-b border-slate-200 bg-[#f6f3ee]">
@@ -432,18 +206,26 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
           </div>
         </Container>
       </section>
-      <section className="border-y border-slate-200 bg-[#f6f3ee]">
+      <section id="inspection-options" className="scroll-mt-24 border-y border-slate-200 bg-[#f6f3ee]">
         <Container>
-          <div className="grid gap-6 py-10 md:grid-cols-[1fr_auto] md:items-center">
-            <div>
-              <div className="text-sm font-semibold text-orange-600">Clear costs before you enquire</div>
-              <h2 className="mt-2 text-3xl font-bold tracking-tight">Straightforward inspection prices</h2>
+          <div className="grid gap-5 py-10 md:grid-cols-[1.05fr_0.95fr] md:items-stretch">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+              <div className="text-xs font-bold uppercase tracking-[0.16em] text-orange-600">Residential</div>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight">Straightforward inspection prices</h2>
               <p className="mt-3 max-w-2xl leading-7 text-slate-600">
-                Targeted roof checks start from £69. Full residential roof inspections with a report delivered within
-                an hour are £149.
+                Targeted roof checks start from £69. Full residential roof inspections with a report delivered within an hour are £149.
               </p>
+              <Link href="/prices" className={`${buttonClasses("dark")} mt-6`}>View residential prices</Link>
             </div>
-            <LinkButton href="/prices" variant="dark">See all prices</LinkButton>
+            <div className="rounded-2xl border border-white/10 bg-slate-950 p-6 text-white shadow-sm sm:p-8">
+              <div className="text-xs font-bold uppercase tracking-[0.16em] text-orange-300">Commercial</div>
+              <h2 className="mt-3 text-2xl font-bold tracking-tight">Industrial &amp; commercial inspections</h2>
+              <div className="mt-3 text-2xl font-bold">from £195</div>
+              <p className="mt-3 text-sm leading-6 text-slate-300">
+                For warehouses, commercial buildings, industrial units and larger or more complex sites, with high-resolution visual evidence and clear reporting.
+              </p>
+              <Link href="/commercial" className={`${buttonClasses("primary")} mt-6`}>Explore commercial inspections</Link>
+            </div>
           </div>
         </Container>
       </section>
@@ -519,19 +301,20 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {[
-                "Homeowners",
-                "Facilities management",
-                "Commercial property",
-                "Roofing contractors",
-                "Construction teams",
-                "Housing and public sector",
+                { label: "Homeowners", href: "/prices" },
+                { label: "Facilities management", href: "/commercial" },
+                { label: "Commercial property", href: "/commercial" },
+                { label: "Roofing contractors", href: "/commercial" },
+                { label: "Construction teams", href: "/commercial" },
+                { label: "Housing and public sector", href: "/commercial" },
               ].map((item) => (
-                <div
-                  key={item}
-                  className="rounded-xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold shadow-sm"
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="rounded-xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold shadow-sm transition hover:border-orange-400 hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
                 >
-                  {item}
-                </div>
+                  {item.label}
+                </Link>
               ))}
             </div>
           </div>
@@ -623,14 +406,9 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                   ))}
                 </ul>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Button
-                    onClick={() => {
-                      setServiceWanted("industrial-commercial");
-                      setRoute("contact");
-                    }}
-                  >
+                  <Link href="/contact?service=industrial-commercial" className={buttonClasses("primary")}>
                     Request this service
-                  </Button>
+                  </Link>
                   <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
                     Text / WhatsApp
                   </LinkButton>
@@ -726,7 +504,7 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
                     Drone inspections for commercial buildings, warehouses, industrial sites, factories, roofs and other assets. Larger or more complex sites are quoted individually based on access, size and scope.
                   </p>
                 </div>
-                <Link href="/contact?service=industrial-commercial" className={`${buttonClasses("primary")} w-full md:w-auto`}>Request Commercial Inspection</Link>
+                <Link href="/commercial#enquiry" className={`${buttonClasses("primary")} w-full md:w-auto`}>Explore Commercial Inspections</Link>
               </div>
             </DarkPanel>
           </div>
@@ -879,112 +657,9 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
             <p className="mt-3 max-w-xl text-slate-600">
               Send the basics. I will reply with next steps, availability and a clear quote.
             </p>
-            <form onSubmit={submitEnquiry} className="mt-8 space-y-4">
-              <div className="space-y-2">
-                <FieldLabel htmlFor="service">What are you interested in?</FieldLabel>
-                <SelectNative
-                  id="service"
-                  value={serviceWanted}
-                  onChange={(event) => setServiceWanted(event.target.value as EnquiryServiceKey | "")}
-                  options={[{ value: "", label: "Choose a service" }, ...ENQUIRY_SERVICE_OPTIONS]}
-                  required
-                />
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <FieldLabel htmlFor="name">Name</FieldLabel>
-                  <TextInput
-                    id="name"
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    placeholder="Full name"
-                    autoComplete="name"
-                    maxLength={200}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <FieldLabel htmlFor="email">Email address</FieldLabel>
-                  <TextInput
-                    id="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder="name@example.com"
-                    type="email"
-                    autoComplete="email"
-                    maxLength={254}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <FieldLabel htmlFor="phone">Phone number</FieldLabel>
-                  <TextInput
-                    id="phone"
-                    value={phone}
-                    onChange={(event) => setPhone(event.target.value)}
-                    placeholder="Your phone number"
-                    type="tel"
-                    inputMode="tel"
-                    autoComplete="tel"
-                    maxLength={100}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <FieldLabel htmlFor="postcode">Property postcode / address</FieldLabel>
-                  <TextInput
-                    id="postcode"
-                    value={postcode}
-                    onChange={(event) => setPostcode(event.target.value)}
-                    placeholder="Address or postcode"
-                    autoComplete="street-address"
-                    maxLength={500}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <FieldLabel htmlFor="preferred-contact">Preferred contact method</FieldLabel>
-                <SelectNative
-                  id="preferred-contact"
-                  value={preferredContact}
-                  onChange={(event) => setPreferredContact(event.target.value as PreferredContactMethod | "")}
-                  options={[{ value: "", label: "Choose how you would like a reply" }, ...PREFERRED_CONTACT_OPTIONS]}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <FieldLabel htmlFor="scope">Details / what needs checking</FieldLabel>
-                <TextArea
-                  id="scope"
-                  value={scope}
-                  onChange={(event) => setScope(event.target.value)}
-                  placeholder="Tell me what you would like checked, including any known issues, access constraints or hazards."
-                  maxLength={5000}
-                  required
-                />
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <Button type="submit" disabled={submissionState === "submitting"}>
-                  {submissionState === "submitting" ? "Sending…" : "Request an inspection"}
-                </Button>
-                <LinkButton href={WHATSAPP_LINK} target="_blank" variant="secondary">
-                  Text / WhatsApp instead
-                </LinkButton>
-              </div>
-              {submissionState === "success" ? (
-                <div role="status" className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-700">
-                  Thanks — your enquiry has been sent. I’ll get back to you as soon as possible.
-                </div>
-              ) : null}
-              {submissionState === "error" ? (
-                <div role="alert" className="rounded-xl border border-orange-500/30 bg-orange-500/10 p-4 text-sm text-slate-800">
-                  {submissionError}
-                </div>
-              ) : null}
-            </form>
+            <div className="mt-8">
+              <EnquiryForm initialService={initialService} idPrefix="contact" />
+            </div>
           </div>
           <div className="space-y-5">
             <DarkPanel className="p-6">
@@ -1048,38 +723,7 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <Header setR
       </Container>
     </main>
   )}
-  <footer className="border-t border-slate-200 bg-white">
-    <Container>
-      <div className="flex flex-col gap-5 py-8 md:flex-row md:items-center md:justify-between">
-        <div>
-          <div className="text-sm font-semibold text-slate-950">
-            © {new Date().getFullYear()} Quadrelliot
-          </div>
-          <div className="mt-1 text-sm text-slate-500">
-            Instant drone inspection reports · United Kingdom
-          </div>
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
-            <a href={"mailto:" + EMAIL} className="hover:text-orange-600">
-              {EMAIL}
-            </a>
-            <a href={"tel:" + PHONE_LINK} className="hover:text-orange-600">
-              {PHONE_DISPLAY}
-            </a>
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="hover:text-orange-600">
-              WhatsApp
-            </a>
-          </div>
-        </div>
-        <Image
-          src="/brand/quadrelliot-wordmark.png"
-          alt="Quadrelliot"
-          width={280}
-          height={90}
-          className="h-auto w-[220px]"
-        />
-      </div>
-    </Container>
-  </footer>
+  <SiteFooter />
 </div>
 );
 }

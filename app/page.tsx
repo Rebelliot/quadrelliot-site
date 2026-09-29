@@ -19,6 +19,14 @@ type: "website",
 },
 };
 
-export default function Page() {
-return <QuadrelliotWebsite />;
+export default async function Page({
+searchParams,
+}: {
+searchParams: Promise<{ view?: string | string[] }>;
+}) {
+const params = await searchParams;
+const view = typeof params.view === "string" ? params.view : "";
+const initialRoute = view === "services" || view === "compliance" ? view : "home";
+
+return <QuadrelliotWebsite initialRoute={initialRoute} />;
 }
