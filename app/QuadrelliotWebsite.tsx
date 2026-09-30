@@ -443,56 +443,89 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <SiteHeader 
 
             <div className="mt-10 grid gap-5 md:grid-cols-2">
               <Card className="flex h-full flex-col border-orange-500/50">
-                <CardBody>
-                  <div className="text-sm font-semibold text-orange-600">Targeted inspection</div>
+                <div className="flex h-full flex-col p-6">
+                  <div className="text-sm font-semibold text-orange-600">One defined concern or area</div>
                   <h2 className="mt-2 text-2xl font-bold">Roof Spot Check</h2>
                   <div className="mt-3 text-4xl font-bold tracking-tight">£69</div>
-                  <p className="mt-4 text-sm leading-6 text-slate-600">One specific concern or area only.</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {["Slipped tile", "Flashing", "Chimney", "Gutter", "Storm damage", "Solar-panel concern"].map((item) => (
-                      <span key={item} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">{item}</span>
-                    ))}
+                  <p className="mt-4 text-sm leading-6 text-slate-600">
+                    Got one specific concern about your roof? We’ll closely inspect one agreed area or issue without the cost of a full roof inspection.
+                  </p>
+                  <div className="mt-5 border-t border-slate-200 pt-4">
+                    <div className="text-sm font-bold text-slate-950">Good for</div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {["Slipped or damaged tiles", "Suspected leaks", "Flashing concerns", "One inaccessible area", "A specific visible defect"].map((item) => (
+                        <span key={item} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">{item}</span>
+                      ))}
+                    </div>
                   </div>
-                  <Link href="/contact?service=roof-spot-check" className={`${buttonClasses("primary")} mt-6 w-full sm:w-auto`}>Request Spot Check</Link>
-                </CardBody>
+                  <div className="mt-5 text-sm leading-6 text-slate-600">
+                    <span className="font-bold text-slate-950">You receive: </span>
+                    Close aerial photographs of the agreed area and clear notes on any visible concerns found there. This is a limited check, not an inspection of the whole roof.
+                  </div>
+                  <Link href="/contact?service=roof-spot-check" className={`${buttonClasses("primary")} mt-6 w-full sm:mt-auto sm:w-auto sm:self-start`}>Request Spot Check</Link>
+                </div>
               </Card>
 
               <DarkPanel className="flex h-full flex-col">
-                <div className="p-6">
-                  <div className="text-sm font-semibold text-orange-300">Full residential inspection</div>
+                <div className="flex h-full flex-col p-6">
+                  <div className="text-sm font-semibold text-orange-300">The whole accessible roof</div>
                   <h2 className="mt-2 text-2xl font-bold">Residential Roof Inspection</h2>
                   <div className="mt-3 text-4xl font-bold tracking-tight">£149</div>
-                  <ul className="mt-4 space-y-2 text-sm leading-6 text-slate-300">
-                    {["Full drone roof inspection", "High-resolution imagery", "Visible defects identified", "Inspection report delivered within one hour of the flight"].map((item) => (
+                  <p className="mt-4 text-sm leading-6 text-slate-300">
+                    A broad visual inspection of the accessible roof as a whole, rather than a check of one individual problem.
+                  </p>
+                  <div className="mt-5 border-t border-white/10 pt-4">
+                    <div className="text-sm font-bold text-white">What we inspect</div>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                      Visible roof coverings, ridges, valleys, flashing, chimneys, gutters and other accessible roof features from multiple aerial angles.
+                    </p>
+                  </div>
+                  <div className="mt-5 text-sm font-bold text-white">You receive</div>
+                  <ul className="mt-2 space-y-2 text-sm leading-6 text-slate-300">
+                    {["High-resolution aerial imagery", "Identification of visible defects or concerns", "A written inspection report", "Report delivered within one hour of the flight"].map((item) => (
                       <li key={item} className="flex gap-3"><span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-orange-400" />{item}</li>
                     ))}
                   </ul>
-                  <Link href="/contact?service=residential-roof-inspection" className={`${buttonClasses("primary")} mt-6 w-full sm:w-auto`}>Request Roof Inspection</Link>
+                  <Link href="/contact?service=residential-roof-inspection" className={`${buttonClasses("primary")} mt-6 w-full sm:mt-auto sm:w-auto sm:self-start`}>Request Roof Inspection</Link>
                 </div>
               </DarkPanel>
 
               <Card className="flex h-full flex-col">
-                <CardBody>
+                <div className="flex h-full flex-col p-6">
                   <div className="text-sm font-semibold text-orange-600">Larger properties</div>
                   <h2 className="mt-2 text-2xl font-bold">Large / Complex Residential</h2>
                   <div className="mt-3 text-3xl font-bold tracking-tight">from £195</div>
                   <p className="mt-4 text-sm leading-6 text-slate-600">
-                    For larger properties or inspections requiring substantially more flight or inspection time.
+                    For properties that need substantially more flight and inspection time. Pricing starts at £195 and depends on the agreed scope.
                   </p>
-                  <Link href="/contact?service=large-complex-residential" className={`${buttonClasses("primary")} mt-6 w-full sm:w-auto`}>Request Quote</Link>
-                </CardBody>
+                  <div className="mt-5 border-t border-slate-200 pt-4">
+                    <div className="text-sm font-bold text-slate-950">Good for</div>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Unusually large roof areas, multiple buildings, several roof levels, complex roof geometry, extensive outbuildings or larger estates.
+                    </p>
+                  </div>
+                  <div className="mt-5 text-sm leading-6 text-slate-600">
+                    <span className="font-bold text-slate-950">You receive: </span>
+                    High-resolution aerial imagery and a written report of visible findings across the areas agreed in the quote.
+                  </div>
+                  <Link href="/contact?service=large-complex-residential" className={`${buttonClasses("primary")} mt-6 w-full sm:mt-auto sm:w-auto sm:self-start`}>Request Quote</Link>
+                </div>
               </Card>
 
               <Card className="flex h-full flex-col">
-                <CardBody>
+                <div className="flex h-full flex-col p-6">
                   <div className="text-sm font-semibold text-orange-600">Scoped to the project</div>
                   <h2 className="mt-2 text-2xl font-bold">Housing / Public Sector</h2>
                   <div className="mt-3 text-3xl font-bold tracking-tight">Quote</div>
                   <p className="mt-4 text-sm leading-6 text-slate-600">
-                    Inspections for housing providers, councils, public bodies and larger portfolios are quoted individually.
+                    Individually scoped inspections for housing providers, managing agents, local authorities, public-sector estates and multi-property requirements.
                   </p>
-                  <Link href="/contact?service=commercial-housing-public-sector" className={`${buttonClasses("primary")} mt-6 w-full sm:w-auto`}>Request Public Sector Quote</Link>
-                </CardBody>
+                  <div className="mt-5 text-sm leading-6 text-slate-600">
+                    <span className="font-bold text-slate-950">You receive: </span>
+                    Inspection coverage, imagery and reporting agreed to suit the properties and practical requirements of the project.
+                  </div>
+                  <Link href="/contact?service=commercial-housing-public-sector" className={`${buttonClasses("primary")} mt-6 w-full sm:mt-auto sm:w-auto sm:self-start`}>Request Public Sector Quote</Link>
+                </div>
               </Card>
             </div>
             <DarkPanel className="mt-5 p-6 sm:p-8">
@@ -501,7 +534,7 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <SiteHeader 
                   <h2 className="text-2xl font-bold">Industrial &amp; Commercial Inspections</h2>
                   <div className="mt-3 text-3xl font-bold tracking-tight">from £195</div>
                   <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-300">
-                    Drone inspections for commercial buildings, warehouses, industrial sites, factories, roofs and other assets. Larger or more complex sites are quoted individually based on access, size and scope.
+                    Visual inspections for larger commercial and industrial roofs, structures and sites. Each job is scoped individually around the asset, access, size and inspection requirements.
                   </p>
                 </div>
                 <Link href="/commercial#enquiry" className={`${buttonClasses("primary")} w-full md:w-auto`}>Explore Commercial Inspections</Link>
@@ -520,22 +553,68 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <SiteHeader 
             </div>
             <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {[
-                { title: "Post-Repair Check", price: "£69", service: "post-repair-check", desc: "A targeted drone inspection after roofing or repair work has been completed." },
-                { title: "Aerial Property Photos", price: "£79", service: "aerial-property-photos", desc: "High-resolution aerial property imagery. No inspection report or defect assessment." },
-                { title: "Gutter & Chimney Check", price: "£79", service: "gutter-chimney-check", desc: "Focused visual check of gutters, chimney stack, pots, flashing and obvious visible defects." },
-                { title: "Solar Panel Visual Check", price: "£79", service: "solar-panel-visual-check", desc: "Aerial visual inspection for obvious panel damage, debris, displacement and visible external issues. This is not an electrical or performance test." },
-                { title: "Storm Damage Check", price: "£89", service: "storm-damage-check", desc: "Targeted inspection for displaced tiles, ridge or flashing damage, gutter damage, debris and other obvious visible issues after severe weather." },
-                { title: "Repair Before & After Pack", price: "£99", service: "repair-before-after-pack", desc: "Aerial imagery before repair work and again after completion for comparison and documentation." },
+                {
+                  title: "Post-Repair Check",
+                  price: "£69",
+                  service: "post-repair-check",
+                  desc: "A visual check of completed roof or exterior repair work from the air.",
+                  details: "Useful for checking replaced tiles, revisiting a previously identified area and documenting the visible condition after contractor work.",
+                  receive: "Close aerial photographs of the agreed repair area and its visible post-work condition. This does not certify workmanship or guarantee the quality of a repair.",
+                },
+                {
+                  title: "Aerial Property Photos",
+                  price: "£79",
+                  service: "aerial-property-photos",
+                  desc: "High-resolution aerial property photographs for records, property presentation, planning or general use.",
+                  details: "Photography only — no condition assessment or inspection report.",
+                  receive: "A set of high-resolution aerial photographs of the property from agreed angles.",
+                },
+                {
+                  title: "Gutter & Chimney Check",
+                  price: "£79",
+                  service: "gutter-chimney-check",
+                  desc: "A focused visual check of externally visible guttering and chimney areas.",
+                  details: "Good for blocked or overflowing gutters, displaced guttering, visible chimney damage, flashing, pots, caps or masonry concerns.",
+                  receive: "Close aerial photographs showing the agreed areas and any externally visible concerns. Visual inspection only.",
+                },
+                {
+                  title: "Solar Panel Visual Check",
+                  price: "£79",
+                  service: "solar-panel-visual-check",
+                  desc: "An external visual check of solar panels and the visible installation.",
+                  details: "Good for obvious panel damage, debris or contamination, displacement, visible mounting concerns, objects or shading affecting panels.",
+                  receive: "Close aerial imagery and visible observations. This is not an electrical performance test and does not diagnose faults within the solar system.",
+                },
+                {
+                  title: "Storm Damage Check",
+                  price: "£89",
+                  service: "storm-damage-check",
+                  desc: "A visual check after strong winds, heavy rain or other severe weather.",
+                  details: "Covers agreed areas for visible issues such as displaced or missing tiles, damaged flashing, gutters, chimneys, roof damage or debris impact.",
+                  receive: "Aerial photographs and visible findings to help you decide whether further repair or investigation may be needed.",
+                },
+                {
+                  title: "Repair Before & After Pack",
+                  price: "£99",
+                  service: "repair-before-after-pack",
+                  desc: "Aerial photography of an agreed area before repair work and again after completion.",
+                  details: "Good for keeping a clear visual record and comparing the same repair area before and after contractor work.",
+                  receive: "High-resolution before-and-after aerial photographs for comparison and documentation.",
+                },
               ].map((item) => (
                 <Card key={item.title} className="flex h-full flex-col">
-                  <CardBody>
+                  <div className="flex h-full flex-col p-6">
                     <div className="flex items-start justify-between gap-4">
                       <h3 className="text-lg font-bold">{item.title}</h3>
                       <div className="shrink-0 text-xl font-bold">{item.price}</div>
                     </div>
                     <p className="mt-3 text-sm leading-6 text-slate-600">{item.desc}</p>
-                    <Link href={`/contact?service=${item.service}`} className={`${buttonClasses("secondary")} mt-5 w-full`}>Enquire about this service</Link>
-                  </CardBody>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">{item.details}</p>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">
+                      <span className="font-bold text-slate-950">You receive: </span>{item.receive}
+                    </p>
+                    <Link href={`/contact?service=${item.service}`} className={`${buttonClasses("secondary")} mt-5 w-full lg:mt-auto`}>Enquire about this service</Link>
+                  </div>
                 </Card>
               ))}
             </div>
@@ -546,7 +625,7 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <SiteHeader 
                   <div className="inline-flex rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-700">Existing customers only</div>
                   <h2 className="mt-3 text-2xl font-bold">Existing Customer Return Check — £49</h2>
                   <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-                    Only available where Quadrelliot has already inspected the property and is returning to recheck a specific issue.
+                    Only available where Quadrelliot has already inspected the property. We return to recheck one specific issue and provide new aerial photographs so the visible condition can be compared with the earlier inspection.
                   </p>
                 </div>
                 <Link href="/contact?service=existing-customer-return-check" className={buttonClasses("dark")}>Request Return Check</Link>
