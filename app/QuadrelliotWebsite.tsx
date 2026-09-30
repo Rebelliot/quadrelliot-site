@@ -554,66 +554,98 @@ return ( <div className="min-h-screen bg-[#f6f3ee] text-slate-950"> <SiteHeader 
             <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {[
                 {
+                  category: "Follow-up check",
                   title: "Post-Repair Check",
                   price: "£69",
                   service: "post-repair-check",
-                  desc: "A visual check of completed roof or exterior repair work from the air.",
-                  details: "Useful for checking replaced tiles, revisiting a previously identified area and documenting the visible condition after contractor work.",
-                  receive: "Close aerial photographs of the agreed repair area and its visible post-work condition. This does not certify workmanship or guarantee the quality of a repair.",
+                  desc: "A visual check of completed repair work or one previously identified issue.",
+                  goodFor: ["Replaced tiles", "Completed repairs", "Previous defects"],
+                  receive: "Close aerial photographs of the agreed area, with notes on any visible concerns.",
+                  note: "Visual assessment only. Does not certify workmanship.",
                 },
                 {
+                  category: "Photography only",
                   title: "Aerial Property Photos",
                   price: "£79",
                   service: "aerial-property-photos",
-                  desc: "High-resolution aerial property photographs for records, property presentation, planning or general use.",
-                  details: "Photography only — no condition assessment or inspection report.",
-                  receive: "A set of high-resolution aerial photographs of the property from agreed angles.",
+                  desc: "Aerial property photography for records, presentation, planning or general use.",
+                  goodFor: ["Property records", "Presentation", "Planning"],
+                  receive: "A set of high-resolution aerial photographs from agreed angles.",
+                  note: "Photography only — no condition assessment or inspection report.",
                 },
                 {
+                  category: "Targeted roof check",
                   title: "Gutter & Chimney Check",
                   price: "£79",
                   service: "gutter-chimney-check",
                   desc: "A focused visual check of externally visible guttering and chimney areas.",
-                  details: "Good for blocked or overflowing gutters, displaced guttering, visible chimney damage, flashing, pots, caps or masonry concerns.",
-                  receive: "Close aerial photographs showing the agreed areas and any externally visible concerns. Visual inspection only.",
+                  goodFor: ["Blocked gutters", "Chimney damage", "Flashing", "Pots / caps", "Masonry concerns"],
+                  receive: "Close aerial photographs of the agreed areas, with notes on externally visible concerns.",
+                  note: "Visual inspection only.",
                 },
                 {
+                  category: "External visual check",
                   title: "Solar Panel Visual Check",
                   price: "£79",
                   service: "solar-panel-visual-check",
                   desc: "An external visual check of solar panels and the visible installation.",
-                  details: "Good for obvious panel damage, debris or contamination, displacement, visible mounting concerns, objects or shading affecting panels.",
-                  receive: "Close aerial imagery and visible observations. This is not an electrical performance test and does not diagnose faults within the solar system.",
+                  goodFor: ["Panel damage", "Debris", "Displacement", "Mounting concerns", "Obstructions"],
+                  receive: "Close aerial imagery of the panels and visible installation, with notes on visible concerns.",
+                  note: "Visual assessment only. Not an electrical performance test or fault diagnosis.",
                 },
                 {
+                  category: "After severe weather",
                   title: "Storm Damage Check",
                   price: "£89",
                   service: "storm-damage-check",
-                  desc: "A visual check after strong winds, heavy rain or other severe weather.",
-                  details: "Covers agreed areas for visible issues such as displaced or missing tiles, damaged flashing, gutters, chimneys, roof damage or debris impact.",
+                  desc: "A quick visual check after strong winds, heavy rain or other severe weather.",
+                  goodFor: ["Missing tiles", "Damaged flashing", "Gutters", "Chimneys", "Debris impact"],
                   receive: "Aerial photographs and visible findings to help you decide whether further repair or investigation may be needed.",
+                  note: "Covers visible damage in the agreed areas.",
                 },
                 {
+                  category: "Repair documentation",
                   title: "Repair Before & After Pack",
                   price: "£99",
                   service: "repair-before-after-pack",
-                  desc: "Aerial photography of an agreed area before repair work and again after completion.",
-                  details: "Good for keeping a clear visual record and comparing the same repair area before and after contractor work.",
+                  desc: "Aerial photography of the same agreed area before and after repair work.",
+                  goodFor: ["Repair records", "Visual comparison", "Contractor work"],
                   receive: "High-resolution before-and-after aerial photographs for comparison and documentation.",
+                  note: "Photography and comparison only — no inspection report.",
                 },
               ].map((item) => (
-                <Card key={item.title} className="flex h-full flex-col">
+                <Card key={item.title} className="flex h-full flex-col border-t-2 border-t-orange-500/60">
                   <div className="flex h-full flex-col p-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <h3 className="text-lg font-bold">{item.title}</h3>
-                      <div className="shrink-0 text-xl font-bold">{item.price}</div>
+                    <div className="text-xs font-bold uppercase tracking-[0.14em] text-orange-600">{item.category}</div>
+                    <h3 className="mt-2 text-xl font-bold tracking-tight text-slate-950">{item.title}</h3>
+                    <div className="mt-2 text-3xl font-bold tracking-tight text-slate-950">{item.price}</div>
+                    <p className="mt-4 text-sm leading-6 text-slate-600">{item.desc}</p>
+
+                    <div className="mt-5 border-t border-slate-200 pt-4">
+                      <div className="text-sm font-bold text-slate-950">Good for</div>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {item.goodFor.map((use) => (
+                          <span key={use} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                            {use}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">{item.desc}</p>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">{item.details}</p>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">
-                      <span className="font-bold text-slate-950">You receive: </span>{item.receive}
-                    </p>
-                    <Link href={`/contact?service=${item.service}`} className={`${buttonClasses("secondary")} mt-5 w-full lg:mt-auto`}>Enquire about this service</Link>
+
+                    <div className="mt-5">
+                      <div className="text-sm font-bold text-slate-950">You receive</div>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">{item.receive}</p>
+                    </div>
+
+                    <div className="mt-auto pt-6">
+                      <Link
+                        href={`/contact?service=${item.service}`}
+                        className="inline-flex min-h-11 items-center justify-center rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 text-sm font-semibold text-slate-950 transition hover:border-orange-500/50 hover:bg-orange-500/15 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
+                      >
+                        Enquire <span aria-hidden="true" className="ml-1">→</span>
+                      </Link>
+                      <p className="mt-4 border-t border-slate-100 pt-3 text-xs leading-5 text-slate-500">{item.note}</p>
+                    </div>
                   </div>
                 </Card>
               ))}
